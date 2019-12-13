@@ -1,0 +1,488 @@
+<!DOCTYPE html>
+
+
+
+
+
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 3.9.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=7.4.0">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=7.4.0">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=7.4.0">
+  <link rel="mask-icon" href="/images/logo.svg?v=7.4.0" color="#222">
+
+<link rel="stylesheet" href="/css/main.css?v=7.4.0">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css?v=4.7.0">
+
+
+<script id="hexo-configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    version: '7.4.0',
+    exturl: false,
+    sidebar: {"position":"left","display":"post","offset":12,"onmobile":false},
+    copycode: {"enable":false,"show_result":false,"style":null},
+    back2top: {"enable":true,"sidebar":false,"scrollpercent":false},
+    bookmark: {"enable":false,"color":"#222","save":"auto"},
+    fancybox: false,
+    mediumzoom: false,
+    lazyload: false,
+    pangu: false,
+    algolia: {
+      appID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    },
+    localsearch: {"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},
+    path: '',
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    translation: {
+      copy_button: '复制',
+      copy_success: '复制成功',
+      copy_failure: '复制失败'
+    },
+    sidebarPadding: 40
+  };
+</script>
+
+  <meta name="description" content="由于最近在写 rcore 教程的时候，里面涉及 risc-v 的汇编代码段，但是 gitbook 上面的语法高亮插件却不支持。然后决定弃用 gitbook 上面的插件，转而考虑两个更早一点出现的网页语法高亮库 highlight.js 以及 prismjs。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="risc-v语法高亮">
+<meta property="og:url" content="http://yoursite.com/2019/11/15/risc-v语法高亮/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="由于最近在写 rcore 教程的时候，里面涉及 risc-v 的汇编代码段，但是 gitbook 上面的语法高亮插件却不支持。然后决定弃用 gitbook 上面的插件，转而考虑两个更早一点出现的网页语法高亮库 highlight.js 以及 prismjs。">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:updated_time" content="2019-11-15T08:49:46.025Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="risc-v语法高亮">
+<meta name="twitter:description" content="由于最近在写 rcore 教程的时候，里面涉及 risc-v 的汇编代码段，但是 gitbook 上面的语法高亮插件却不支持。然后决定弃用 gitbook 上面的插件，转而考虑两个更早一点出现的网页语法高亮库 highlight.js 以及 prismjs。">
+  <link rel="canonical" href="http://yoursite.com/2019/11/15/risc-v语法高亮/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome: false,
+    isPost: true,
+    isPage: false,
+    isArchive: false
+  };
+</script>
+
+  <title>risc-v语法高亮 | Hexo</title>
+  
+
+
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .logo,
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-CN">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-meta">
+
+    <div>
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Hexo</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+  </div>
+
+  <div class="site-nav-toggle">
+    <button aria-label="切换导航栏">
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+
+<nav class="site-nav">
+  
+  <ul id="menu" class="menu">
+      
+      
+      
+        
+        <li class="menu-item menu-item-home">
+      
+    
+
+    <a href="/" rel="section"><i class="menu-item-icon fa fa-fw fa-home"></i> <br>首页</a>
+
+  </li>
+      
+      
+      
+        
+        <li class="menu-item menu-item-archives">
+      
+    
+
+    <a href="/archives/" rel="section"><i class="menu-item-icon fa fa-fw fa-archive"></i> <br>归档</a>
+
+  </li>
+  </ul>
+
+    
+
+</nav>
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+      <article itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block post">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/11/15/risc-v语法高亮/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="shinbokuow">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Hexo">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">risc-v语法高亮
+
+          
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              
+                
+              
+
+              <time title="创建时间：2019-11-15 14:19:27 / 修改时间：16:49:46" itemprop="dateCreated datePublished" datetime="2019-11-15T14:19:27+08:00">2019-11-15</time>
+            </span>
+          
+            
+
+            
+          
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p>由于最近在写 rcore 教程的时候，里面涉及 risc-v 的汇编代码段，但是 gitbook 上面的语法高亮插件却不支持。然后决定弃用 gitbook 上面的插件，转而考虑两个更早一点出现的网页语法高亮库 highlight.js 以及 prismjs。</p>
+<a id="more"></a>
+<p>调研下来的结果是：</p>
+<ul>
+<li>highlight.js 上面有 mips 的高亮，这个和 risc-v 的语法是比较相近的，就是一些寄存器和指令有所不同；</li>
+<li>prismjs 上面对于汇编的语法支持就很有限了，和 risc-v 都搭不上边。而且我感觉我也不太能看懂怎么自己加入一门新语言。但是其好处是上面的插件很多，比如括号匹配，模仿终端，还有 Diff Highlight 等都是很好用的功能。</li>
+</ul>
+<p>花了一下午照着 risc-v 手册写了个基于 prismjs 的语法高亮器，只需把下面这段加到下载下来的 <code>prism.js</code> 中：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br></pre></td><td class="code"><pre><span class="line">Prism.languages.riscv = &#123;</span><br><span class="line">    <span class="string">'comment'</span>: <span class="regexp">/#.*\n/</span>,</span><br><span class="line">    </span><br><span class="line">    <span class="string">'general-registers'</span> : &#123;</span><br><span class="line">        pattern: <span class="regexp">/\b(?:x[1-2]?[0-9]|x30|x31|zero|ra|sp|gp|tp|fp|t[0-6]|s[0-9]|s1[0-1]|a[0-7]|pc)\b/</span>,</span><br><span class="line">        alias: <span class="string">'class-name'</span></span><br><span class="line">    &#125;,</span><br><span class="line">    <span class="string">'s-mode-csrs'</span> : &#123;</span><br><span class="line">        pattern: <span class="regexp">/\bs(?:status|tvec|ip|ie|counteren|scratch|epc|cause|tval|atp|)\b/</span>,</span><br><span class="line">        alias: <span class="string">'class-name'</span></span><br><span class="line">    &#125;,</span><br><span class="line">    </span><br><span class="line">    <span class="comment">/* timer &amp; monitor csrs are not included yet */</span></span><br><span class="line">    <span class="string">'m-mode-csrs'</span> : &#123;</span><br><span class="line">        pattern: <span class="regexp">/\bm(?:isa|vendorid|archid|hardid|status|tvec|ideleg|ip|ie|counteren|scratch|epc|cause|tval)\b/</span>,</span><br><span class="line">        alias: <span class="string">'class-name'</span></span><br><span class="line">    &#125;,</span><br><span class="line">    </span><br><span class="line">    </span><br><span class="line">    </span><br><span class="line">    <span class="string">'rv32/64i-instructions'</span>: &#123;</span><br><span class="line">        pattern: <span class="regexp">/\b(?:(addi?w?)|(slti?u?)|(?:and|or|xor)i?|(?:sll|srl|sra)i?w?|lui|auipc|subw?|jal|jalr|beq|bne|bltu?|bgeu?|s[bhwd]|(l[bhw]u?)|ld)\b/</span>,</span><br><span class="line">        alias: <span class="string">'keyword'</span></span><br><span class="line">    &#125;,   </span><br><span class="line">    <span class="string">'csr-instructions'</span>: &#123;</span><br><span class="line">        pattern:  <span class="regexp">/\b(?:csrr?[rws]i?)\b/</span>,</span><br><span class="line">        alias: <span class="string">'keyword'</span></span><br><span class="line">    &#125;,    </span><br><span class="line">    <span class="string">'pseudo-instructions'</span>: &#123;</span><br><span class="line">        pattern: <span class="regexp">/\b(?:nop|li|la|mv|not|neg|negw|sext.w|seqz|snez|sltz|sgtz|f(?:mv|abs|neg).(?:s|d)|b(?:eq|ne|le|ge|lt)z|bgt|ble|bgtu|bleu|j|jr|ret)\b/</span>,</span><br><span class="line">        alias: <span class="string">'important'</span></span><br><span class="line">    &#125;,</span><br><span class="line">       </span><br><span class="line">    <span class="string">'relocation-functions'</span>: &#123;</span><br><span class="line">        pattern: <span class="regexp">/(?:%hi|%lo|%pcrel_hi|%pcrel_lo|%tprel_(?:hi|lo|add))/</span>,</span><br><span class="line">        alias: <span class="string">'important'</span></span><br><span class="line">    &#125;,</span><br><span class="line">    </span><br><span class="line">    <span class="comment">/* 'function': /function/, */</span></span><br><span class="line"></span><br><span class="line">    <span class="string">'number'</span>: <span class="regexp">/(?:0x[\da-f]+|0o[0-7]+|\d+)/</span>,</span><br><span class="line">    </span><br><span class="line">    <span class="string">'operator'</span>: <span class="regexp">/operator/</span>,</span><br><span class="line">    <span class="string">'data-emitting-directives'</span>: &#123;</span><br><span class="line">        pattern: <span class="regexp">/(?:.2byte|.4byte|.8byte|.half|.word|.dword|.byte|.dtpreldword|.dtprelword|.sleb128|.uleb128|.asciz|.string|.incbin|.zero)/</span>,</span><br><span class="line">        alias: <span class="string">'tag'</span></span><br><span class="line">    &#125;,</span><br><span class="line">    <span class="string">'alignment-directives'</span>: &#123;</span><br><span class="line">        pattern: <span class="regexp">/(?:.align|.balign|.p2align)/</span>,</span><br><span class="line">        alias: <span class="string">'tag'</span></span><br><span class="line">    &#125;,</span><br><span class="line">    <span class="string">'symbol-directives'</span>: &#123;</span><br><span class="line">        pattern: <span class="regexp">/(?:.globl|.local|.equ)/</span>,</span><br><span class="line">        alias: <span class="string">'tag'</span></span><br><span class="line">    &#125;,</span><br><span class="line">    <span class="string">'section-directives'</span>: &#123;</span><br><span class="line">        pattern: <span class="regexp">/(?:.text|.data|.rodata|.bss|.comm|.common|.section)/</span>,</span><br><span class="line">        alias: <span class="string">'tag'</span></span><br><span class="line">    &#125;,</span><br><span class="line">    <span class="string">'miscellaneous-directives'</span>: &#123;</span><br><span class="line">        pattern: <span class="regexp">/(?:.option|.macro|.endm|.file|.ident|.size|.type)/</span>,</span><br><span class="line">        alias: <span class="string">'tag'</span></span><br><span class="line">    &#125;,</span><br><span class="line">    </span><br><span class="line">    <span class="string">'labels'</span>: &#123;</span><br><span class="line">        pattern: <span class="regexp">/\S*:/</span>,</span><br><span class="line">        alias: <span class="string">'operator'</span></span><br><span class="line">    &#125;,</span><br><span class="line">    <span class="string">'last-literals'</span>: &#123;</span><br><span class="line">        pattern: <span class="regexp">/\b\S*\b/</span>,</span><br><span class="line">        alias: <span class="string">'operator'</span>,</span><br><span class="line">    &#125;,</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<p>比较简单，也不支持全部的指令，不过试了一下已经能用了。</p>
+<p>有时间把这个弄到 gitbook 上面去。</p>
+
+    </div>
+
+    
+    
+    
+        
+      
+
+      <footer class="post-footer">
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-next post-nav-item">
+              
+                <a href="/2019/11/14/VR抓蚊子01-HRTF算法/" rel="next" title="VR抓蚊子01-HRTF算法">
+                  <i class="fa fa-chevron-left"></i> VR抓蚊子01-HRTF算法
+                </a>
+              
+            </div>
+
+            <span class="post-nav-divider"></span>
+
+            <div class="post-nav-prev post-nav-item">
+              
+                <a href="/2019/11/16/优雅访问Coursera/" rel="prev" title="优雅访问Coursera">
+                  优雅访问Coursera <i class="fa fa-chevron-right"></i>
+                </a>
+              
+            </div>
+          </div>
+        
+      </footer>
+    
+  </div>
+  
+  
+  
+  </article>
+
+  </div>
+
+
+          </div>
+          
+
+        </div>
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+        
+        
+        
+        
+      
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">shinbokuow</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+  <nav class="site-state motion-element">
+      <div class="site-state-item site-state-posts">
+        
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">17</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+    
+  </nav>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2019</span>
+  <span class="with-love" id="animate">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">shinbokuow</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io" class="theme-link" rel="noopener" target="_blank">Hexo</a> 强力驱动 v3.9.0</div>
+  <span class="post-meta-divider">|</span>
+  <div class="theme-info">主题 – <a href="https://theme-next.org" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a> v7.4.0</div>
+
+        
+
+
+
+
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+  </div>
+
+  
+
+
+  <script src="/lib/anime.min.js?v=3.1.0"></script>
+  <script src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  <script src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+<script src="/js/utils.js?v=7.4.0"></script><script src="/js/motion.js?v=7.4.0"></script>
+<script src="/js/schemes/muse.js?v=7.4.0"></script>
+<script src="/js/next-boot.js?v=7.4.0"></script>
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+    
+      
+<script type="text/x-mathjax-config">
+
+  MathJax.Hub.Config({
+    tex2jax: {
+      inlineMath: [ ['$', '$'], ['\\(', '\\)'] ],
+      processEscapes: true,
+      skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    },
+    TeX: {
+      equationNumbers: {
+        autoNumber: 'AMS'
+      }
+    }
+  });
+
+  MathJax.Hub.Register.StartupHook('TeX Jax Ready', function() {
+    MathJax.InputJax.TeX.prefilterHooks.Add(function(data) {
+      if (data.display) {
+        var next = data.script.nextSibling;
+        while (next && next.nodeName.toLowerCase() === '#text') {
+          next = next.nextSibling;
+        }
+        if (next && next.nodeName.toLowerCase() === 'br') {
+          next.parentNode.removeChild(next);
+        }
+      }
+    });
+  });
+
+  MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for (i = 0; i < all.length; i += 1) {
+      element = document.getElementById(all[i].inputID + '-Frame').parentNode;
+      if (element.nodeName.toLowerCase() == 'li') {
+        element = element.parentNode;
+      }
+      element.classList.add('has-jax');
+    }
+  });
+</script>
+<script>
+  NexT.utils.getScript('//cdn.jsdelivr.net/npm/mathjax@2/MathJax.js?config=TeX-AMS-MML_HTMLorMML', () => {
+    MathJax.Hub.Typeset();
+  }, window.MathJax);
+</script>
+
+    
+  
+
+  
+
+  
+
+</body>
+</html>

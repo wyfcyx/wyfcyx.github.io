@@ -1,0 +1,516 @@
+<!DOCTYPE html>
+
+
+
+
+
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 3.9.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=7.4.0">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=7.4.0">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=7.4.0">
+  <link rel="mask-icon" href="/images/logo.svg?v=7.4.0" color="#222">
+
+<link rel="stylesheet" href="/css/main.css?v=7.4.0">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css?v=4.7.0">
+
+
+<script id="hexo-configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    version: '7.4.0',
+    exturl: false,
+    sidebar: {"position":"left","display":"post","offset":12,"onmobile":false},
+    copycode: {"enable":false,"show_result":false,"style":null},
+    back2top: {"enable":true,"sidebar":false,"scrollpercent":false},
+    bookmark: {"enable":false,"color":"#222","save":"auto"},
+    fancybox: false,
+    mediumzoom: false,
+    lazyload: false,
+    pangu: false,
+    algolia: {
+      appID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    },
+    localsearch: {"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},
+    path: '',
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    translation: {
+      copy_button: '复制',
+      copy_success: '复制成功',
+      copy_failure: '复制失败'
+    },
+    sidebarPadding: 40
+  };
+</script>
+
+  <meta name="description" content="距离上一次写博客，已经是三个星期之前的事情了。这段时间我在看操作系统的代码以及相关的背景知识，最后惊讶的发现居然是把一切都写下来效率更高。于是乎几乎一整个笔记上都写满了各种代码。 我是觉得这样做不一定比用打字记录的方式效率更高，但是无疑在那段困难的时光中，踏实的在纸上用笔书写这种方式，能够让我暂时忘记我要面对的是怎样一种绝望，而是更加集中精力到眼下的事情。 我可以说服自己我真的努力过了，虽然结果相">
+<meta property="og:type" content="article">
+<meta property="og:title" content="VR抓蚊子01-HRTF算法">
+<meta property="og:url" content="http://yoursite.com/2019/11/14/VR抓蚊子01-HRTF算法/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="距离上一次写博客，已经是三个星期之前的事情了。这段时间我在看操作系统的代码以及相关的背景知识，最后惊讶的发现居然是把一切都写下来效率更高。于是乎几乎一整个笔记上都写满了各种代码。 我是觉得这样做不一定比用打字记录的方式效率更高，但是无疑在那段困难的时光中，踏实的在纸上用笔书写这种方式，能够让我暂时忘记我要面对的是怎样一种绝望，而是更加集中精力到眼下的事情。 我可以说服自己我真的努力过了，虽然结果相">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:updated_time" content="2019-11-15T12:31:35.682Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="VR抓蚊子01-HRTF算法">
+<meta name="twitter:description" content="距离上一次写博客，已经是三个星期之前的事情了。这段时间我在看操作系统的代码以及相关的背景知识，最后惊讶的发现居然是把一切都写下来效率更高。于是乎几乎一整个笔记上都写满了各种代码。 我是觉得这样做不一定比用打字记录的方式效率更高，但是无疑在那段困难的时光中，踏实的在纸上用笔书写这种方式，能够让我暂时忘记我要面对的是怎样一种绝望，而是更加集中精力到眼下的事情。 我可以说服自己我真的努力过了，虽然结果相">
+  <link rel="canonical" href="http://yoursite.com/2019/11/14/VR抓蚊子01-HRTF算法/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome: false,
+    isPost: true,
+    isPage: false,
+    isArchive: false
+  };
+</script>
+
+  <title>VR抓蚊子01-HRTF算法 | Hexo</title>
+  
+
+
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .logo,
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-CN">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-meta">
+
+    <div>
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Hexo</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+  </div>
+
+  <div class="site-nav-toggle">
+    <button aria-label="切换导航栏">
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+
+<nav class="site-nav">
+  
+  <ul id="menu" class="menu">
+      
+      
+      
+        
+        <li class="menu-item menu-item-home">
+      
+    
+
+    <a href="/" rel="section"><i class="menu-item-icon fa fa-fw fa-home"></i> <br>首页</a>
+
+  </li>
+      
+      
+      
+        
+        <li class="menu-item menu-item-archives">
+      
+    
+
+    <a href="/archives/" rel="section"><i class="menu-item-icon fa fa-fw fa-archive"></i> <br>归档</a>
+
+  </li>
+  </ul>
+
+    
+
+</nav>
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+      <article itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block post">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/11/14/VR抓蚊子01-HRTF算法/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="shinbokuow">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Hexo">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">VR抓蚊子01-HRTF算法
+
+          
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              
+                
+              
+
+              <time title="创建时间：2019-11-14 20:29:15" itemprop="dateCreated datePublished" datetime="2019-11-14T20:29:15+08:00">2019-11-14</time>
+            </span>
+          
+            
+
+            
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2019-11-15 20:31:35" itemprop="dateModified" datetime="2019-11-15T20:31:35+08:00">2019-11-15</time>
+              </span>
+            
+          
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p>距离上一次写博客，已经是三个星期之前的事情了。这段时间我在看操作系统的代码以及相关的背景知识，最后惊讶的发现居然是把一切都写下来效率更高。于是乎几乎一整个笔记上都写满了各种代码。</p>
+<p>我是觉得这样做不一定比用打字记录的方式效率更高，但是无疑在那段困难的时光中，踏实的在纸上用笔书写这种方式，能够让我暂时忘记我要面对的是怎样一种绝望，而是更加集中精力到眼下的事情。</p>
+<p>我可以说服自己我真的努力过了，虽然结果相比不尽如人意，但是确定不会挂掉也让我松了一口气。天知道我之前都经历了什么啊。有些困境如果你没有亲身经历过的话，是无论如何也不可能体会到那种绝望的。</p>
+<p>就不提那时候的事情了。操作系统相关的笔记应该都会以某种方式整理到我最终的 rcore tutorial 中，也不会在某天不小心扔进垃圾桶的。这里还是将 rCore 改成 rcore，毕竟我要感谢帮助我的那位同学。</p>
+<p>VR 第二次小作业快到 ddl 了，那我就看一下。</p>
+ <a id="more"></a>
+<h2 id="立体声"><a href="#立体声" class="headerlink" title="立体声"></a>立体声</h2><p>从百度百科来看，声道 (Sound Channel) 是指声音在录制和播放时在不同空间位置采集或回放的相互独立的音频信号，所以声道数也就是声音录制时的音源数量或回放时相应的扬声器数量。</p>
+<p>除非进行了某种合成，那么播放时的声道数应不超过录制时的声道数。</p>
+<p>使用单声道播放的声音被称为单声，我们带着耳机虽然两只耳机都能发出声音，但是其信号是完全相同，所以也只能称为单声；</p>
+<p>使用双声道播放，如果两只耳机里面播放的音频信号不同，使得我们可以从中感知到虚拟的音源相对于我们的空间位置，那么无疑这种声音更为立体，就好像我们就处在音源附近一样，这种声音被称为立体声；</p>
+<p>如果播放的声道数继续增加，比如在房间内的各个地方都放上音响，这样就称为环绕声。</p>
+<h2 id="HRTF-算法"><a href="#HRTF-算法" class="headerlink" title="HRTF 算法"></a>HRTF 算法</h2><p>HRTF (head-related transfer function) 可以帮助我们将单声转化为立体声。确切的说，是将原本单声道的一个信号，加上我们拥有的虚拟音源相对于我们的角度 $\theta,\phi$ 以及虚拟音源到我们的距离 $d$ 这些信息，生成针对于耳机的左耳、右耳两个声道的信号。</p>
+<p>其中 $\theta$ 是水平的，从正左的 <script type="math/tex">-90^o</script> 到正右的 $90^o$ ；</p>
+<p>$\phi$ 是俯仰的，从正前方的 $0^o$ ，到正上方的 $90^0$ ，再到正下方的 $270^o(-90^o)$ 。</p>
+<p>确定 $\theta,\phi$ 后，我们就可以获得两个信号 (左、右声道)，我们将这个信号与单声道信号卷积(事实上在 Matlab 中通过 <code>filter</code> 一维滤波器)之后就可得到生成的左、右声道的两个信号。</p>
+<p>这个信号可以在数据库 CIPIC 里面查到，文档 <a href="https://ucdavis.app.box.com/s/lt5atmsr4hxo6yrim0fwmtfjvpbf2g7e" target="_blank" rel="noopener">CIPIC doc</a> 。里面 $\theta,\phi$ 都是离散的，$\theta$ 有 $25$ 个点， $\phi$ 有 $50$ 个点，获得的信号长度 $200$ 。</p>
+<h2 id="实时-HRTF"><a href="#实时-HRTF" class="headerlink" title="实时 HRTF"></a>实时 HRTF</h2><p>预先对于所有的 $\theta$ ，以及 $\phi={0^o,180^o}$ 使用 Matlab 合成好所有的双声道音频。</p>
+<p>一段长度为 $5$ 秒钟的 $\text{wav}$ 格式单声道蚊子音频 $500\text{KiB}$ 。总共需要 $\text{500KiB}\times 25\times2\times2=50\text{MiB}$。</p>
+<p>设置每只蚊子的声音都是循环播放的，我们只需在 <code>onDrawEye</code> 时根据当前的 $\theta,\phi$ 切换我们所要播放的音频即可。如果不用切换的话还好，要切换的话则需要从当前的时间开始播放。我们可以使用 <code>seekTo</code> 函数。</p>
+<p>我们先看一下 <code>android.media.MediaPlayer</code> 。</p>
+<p>多只蚊子的话好像不太行。就做成一只蚊子吧。</p>
+<h2 id="游戏环境"><a href="#游戏环境" class="headerlink" title="游戏环境"></a>游戏环境</h2><p>你处在一个封闭环境中，场景中每次会刷出 <strong>恰好一只</strong> 蚊子，只有它的位置距离你的视线小于一定数值才能被你看见，这迫使你必须通过立体声来定位蚊子的位置。</p>
+<p>你可以看到以虚线形式出现的你的视线。</p>
+<p>这样蚊子好像被局限到一个平面上去了… 但是也没办法，就这样吧。</p>
+<p>方便起见，蚊子是一个球，你的视线距离球心小于 $R$ 可以看见球，小于 $r$ 球变为红色，此时按一下 trigger 球消失，游戏 reset 。</p>
+<p>最简单的方式是：在 <code>onNewFrame</code> 里面判断要切换音频的话，就开始新音频的异步载入，回调函数中停止老音频，新音频从老音频停的位置继续播放。</p>
+<h2 id="断裂感"><a href="#断裂感" class="headerlink" title="断裂感"></a>断裂感</h2><p>不知道怎样做才能减少切换音频时的断裂感。</p>
+<p>如果要进行淡入淡出的话，这里面是不是通过锁帧比较方便？这样我们就固定知道音频段的固定播放长度。</p>
+<p>这个实时淡入淡出感觉好复杂。效果实在不行的话再考虑吧。</p>
+
+    </div>
+
+    
+    
+    
+        
+      
+
+      <footer class="post-footer">
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-next post-nav-item">
+              
+                <a href="/2019/10/27/risc-v指令集阅读/" rel="next" title="risc-v指令集阅读">
+                  <i class="fa fa-chevron-left"></i> risc-v指令集阅读
+                </a>
+              
+            </div>
+
+            <span class="post-nav-divider"></span>
+
+            <div class="post-nav-prev post-nav-item">
+              
+                <a href="/2019/11/15/risc-v语法高亮/" rel="prev" title="risc-v语法高亮">
+                  risc-v语法高亮 <i class="fa fa-chevron-right"></i>
+                </a>
+              
+            </div>
+          </div>
+        
+      </footer>
+    
+  </div>
+  
+  
+  
+  </article>
+
+  </div>
+
+
+          </div>
+          
+
+        </div>
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+        
+        
+        
+        
+      
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#立体声"><span class="nav-number">1.</span> <span class="nav-text">立体声</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#HRTF-算法"><span class="nav-number">2.</span> <span class="nav-text">HRTF 算法</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#实时-HRTF"><span class="nav-number">3.</span> <span class="nav-text">实时 HRTF</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#游戏环境"><span class="nav-number">4.</span> <span class="nav-text">游戏环境</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#断裂感"><span class="nav-number">5.</span> <span class="nav-text">断裂感</span></a></li></ol></div>
+        
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">shinbokuow</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+  <nav class="site-state motion-element">
+      <div class="site-state-item site-state-posts">
+        
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">17</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+    
+  </nav>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2019</span>
+  <span class="with-love" id="animate">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">shinbokuow</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io" class="theme-link" rel="noopener" target="_blank">Hexo</a> 强力驱动 v3.9.0</div>
+  <span class="post-meta-divider">|</span>
+  <div class="theme-info">主题 – <a href="https://theme-next.org" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a> v7.4.0</div>
+
+        
+
+
+
+
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+  </div>
+
+  
+
+
+  <script src="/lib/anime.min.js?v=3.1.0"></script>
+  <script src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  <script src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+<script src="/js/utils.js?v=7.4.0"></script><script src="/js/motion.js?v=7.4.0"></script>
+<script src="/js/schemes/muse.js?v=7.4.0"></script>
+<script src="/js/next-boot.js?v=7.4.0"></script>
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+    
+      
+<script type="text/x-mathjax-config">
+
+  MathJax.Hub.Config({
+    tex2jax: {
+      inlineMath: [ ['$', '$'], ['\\(', '\\)'] ],
+      processEscapes: true,
+      skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    },
+    TeX: {
+      equationNumbers: {
+        autoNumber: 'AMS'
+      }
+    }
+  });
+
+  MathJax.Hub.Register.StartupHook('TeX Jax Ready', function() {
+    MathJax.InputJax.TeX.prefilterHooks.Add(function(data) {
+      if (data.display) {
+        var next = data.script.nextSibling;
+        while (next && next.nodeName.toLowerCase() === '#text') {
+          next = next.nextSibling;
+        }
+        if (next && next.nodeName.toLowerCase() === 'br') {
+          next.parentNode.removeChild(next);
+        }
+      }
+    });
+  });
+
+  MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for (i = 0; i < all.length; i += 1) {
+      element = document.getElementById(all[i].inputID + '-Frame').parentNode;
+      if (element.nodeName.toLowerCase() == 'li') {
+        element = element.parentNode;
+      }
+      element.classList.add('has-jax');
+    }
+  });
+</script>
+<script>
+  NexT.utils.getScript('//cdn.jsdelivr.net/npm/mathjax@2/MathJax.js?config=TeX-AMS-MML_HTMLorMML', () => {
+    MathJax.Hub.Typeset();
+  }, window.MathJax);
+</script>
+
+    
+  
+
+  
+
+  
+
+</body>
+</html>

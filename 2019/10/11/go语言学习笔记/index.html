@@ -1,0 +1,537 @@
+<!DOCTYPE html>
+
+
+
+
+
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 3.9.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=7.4.0">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=7.4.0">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=7.4.0">
+  <link rel="mask-icon" href="/images/logo.svg?v=7.4.0" color="#222">
+
+<link rel="stylesheet" href="/css/main.css?v=7.4.0">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css?v=4.7.0">
+
+
+<script id="hexo-configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    version: '7.4.0',
+    exturl: false,
+    sidebar: {"position":"left","display":"post","offset":12,"onmobile":false},
+    copycode: {"enable":false,"show_result":false,"style":null},
+    back2top: {"enable":true,"sidebar":false,"scrollpercent":false},
+    bookmark: {"enable":false,"color":"#222","save":"auto"},
+    fancybox: false,
+    mediumzoom: false,
+    lazyload: false,
+    pangu: false,
+    algolia: {
+      appID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    },
+    localsearch: {"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},
+    path: '',
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    translation: {
+      copy_button: '复制',
+      copy_success: '复制成功',
+      copy_failure: '复制失败'
+    },
+    sidebarPadding: 40
+  };
+</script>
+
+  <meta name="description" content="为了去看Biscuit内核，学习一下Go语言，看起来简易教程挺短的。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="go语言学习笔记">
+<meta property="og:url" content="http://yoursite.com/2019/10/11/go语言学习笔记/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="为了去看Biscuit内核，学习一下Go语言，看起来简易教程挺短的。">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:updated_time" content="2019-10-11T19:36:28.915Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="go语言学习笔记">
+<meta name="twitter:description" content="为了去看Biscuit内核，学习一下Go语言，看起来简易教程挺短的。">
+  <link rel="canonical" href="http://yoursite.com/2019/10/11/go语言学习笔记/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome: false,
+    isPost: true,
+    isPage: false,
+    isArchive: false
+  };
+</script>
+
+  <title>go语言学习笔记 | Hexo</title>
+  
+
+
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .logo,
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-CN">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-meta">
+
+    <div>
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Hexo</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+  </div>
+
+  <div class="site-nav-toggle">
+    <button aria-label="切换导航栏">
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+
+<nav class="site-nav">
+  
+  <ul id="menu" class="menu">
+      
+      
+      
+        
+        <li class="menu-item menu-item-home">
+      
+    
+
+    <a href="/" rel="section"><i class="menu-item-icon fa fa-fw fa-home"></i> <br>首页</a>
+
+  </li>
+      
+      
+      
+        
+        <li class="menu-item menu-item-archives">
+      
+    
+
+    <a href="/archives/" rel="section"><i class="menu-item-icon fa fa-fw fa-archive"></i> <br>归档</a>
+
+  </li>
+  </ul>
+
+    
+
+</nav>
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+      <article itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block post">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/10/11/go语言学习笔记/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="shinbokuow">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Hexo">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">go语言学习笔记
+
+          
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              
+                
+              
+
+              <time title="创建时间：2019-10-11 23:52:48" itemprop="dateCreated datePublished" datetime="2019-10-11T23:52:48+08:00">2019-10-11</time>
+            </span>
+          
+            
+
+            
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2019-10-12 03:36:28" itemprop="dateModified" datetime="2019-10-12T03:36:28+08:00">2019-10-12</time>
+              </span>
+            
+          
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p>为了去看Biscuit内核，学习一下Go语言，看起来简易教程挺短的。<br><a id="more"></a></p>
+<ul>
+<li><p><code>fmt.Println</code>格式化输出，<code>fmt.Sprint</code>格式化字符串</p>
+<p><code>strings.Join([]string, &quot; &quot;)</code></p>
+<p><code>strings.Fields(string) []string</code>，返回被空格隔开的若干不含空格子串</p>
+</li>
+<li><p>名字开头大写表示被导出，才能在包外使用。</p>
+</li>
+<li><p>函数参数类型在变量名之后。</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">add</span><span class="params">(x, y <span class="keyword">int</span>)</span> <span class="title">int</span></span> &#123; <span class="keyword">return</span> x + y &#125;</span><br></pre></td></tr></table></figure>
+<p>多个相同类型参数<code>x int, y int-&gt; x, y int</code></p>
+<p>函数可返回一个元组如<code>a, b := swap(&quot;hello&quot;, &quot;world&quot;)</code></p>
+<p>函数返回值可被命名，如返回值为<code>(x, y int)</code>只需在函数内分别给<code>x,y</code>赋值即可，<code>return</code>无参数</p>
+</li>
+<li><p><code>var</code>用来声明一个变量列表，<code>var c, python bool</code>，可以出现在包或函数级别</p>
+<p>变量初始化<code>var i, j int = 1, 2</code>，可以自动类型推导，此时变量列表类型不必一致</p>
+<p>在函数内可以直接使用<code>k := 3</code>代替变量声明，但<strong>函数外每条语句必须以关键词开头</strong>，所以函数外只能用<code>var</code>声明变量</p>
+</li>
+<li><p>Go的基本类型有<code>bool</code>，<code>string</code>，<code>int(uint),int8,int16,int32,int64</code>，<code>byte=uint8</code>，<code>rune=int32</code>，<code>float32,float64</code>，<code>complex64,complex128</code></p>
+<p><code>int,uint,uintptr</code>在<code>32</code>位系统上为<code>32</code>位，在<code>64</code>位系统上为<code>64</code>位</p>
+<p>在<code>Printf</code>中，<code>%T</code>占位符表示变量类型字符串，<code>%v</code>表示变量值字符串</p>
+<p>零初始化：数值类型0，bool类型false，字符串空串</p>
+<p>类型转化<code>T(v)</code>将值<code>v</code>转换为类型<code>T</code>，<strong>没有隐式类型转换</strong>，因此<code>int+float32</code><strong>会报错</strong></p>
+<p>在变量初始化与赋值中支持<strong>自动类型推导</strong></p>
+<p>使用<code>const</code>声明常量，常量不支持赋值运算符</p>
+<p><strong>Go会在编译期一定程度上支持整数溢出直接报错</strong></p>
+</li>
+<li><p><strong>Go只有for循环</strong></p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">sum := <span class="number">0</span></span><br><span class="line"><span class="keyword">for</span> i := <span class="number">0</span>; i &lt; <span class="number">10</span>; i++ &#123;</span><br><span class="line">    sum += i</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<p>  初始化语句若声明变量，则只在循环体中可见。</p>
+<p>  只有条件判断语句，可以省略前后两个分号实现<code>while</code>功能。</p>
+<p>  无限循环<code>for{}</code></p>
+<p>  <code>if</code>在判断之前也可以加上一个赋值型变量声明语句如<code>if i := 0; ... {}</code>，声明的变量在<code>if-else</code>块中均有效</p>
+<p>  <code>switch</code>运行第一个值等于表达式的<code>case</code>语句，<code>switch</code>后的变量之前可以插入变量声明，相比C语言，每个case后面会自动加<code>break</code>，最后有一个<code>default</code>，同时case后面的值不必为整数常量</p>
+<p>  <code>switch</code>后面<strong>不加比较变量，而在每个case后面接bool表达式</strong>，可以用来实现更为通用的<code>if-else</code>链情形。</p>
+<p>  <code>deter</code>语句会将函数推迟到外层函数返回后执行，推迟调用的函数<strong>参数</strong>立即求值，但<strong>外层函数返回后才会被调用</strong>；实现时将声明的函数压入<code>defer</code>栈，因此会按照声明顺序<strong>从后往前进行调用</strong></p>
+<ul>
+<li><p><code>*T</code>表示指向<code>T</code>类型的指针，空指针<code>nil</code>，<code>&amp;,*</code>语义同C语言</p>
+<p><strong>Go不支持指针运算</strong></p>
+</li>
+<li><p>结构体声明与输出</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">type</span> Vertex <span class="keyword">struct</span> &#123;</span><br><span class="line">    X <span class="keyword">int</span></span><br><span class="line">    Y <span class="keyword">int</span></span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">main</span><span class="params">()</span></span> &#123;</span><br><span class="line">    v := Vertex&#123;<span class="number">1</span>, <span class="number">2</span>&#125;</span><br><span class="line">    fmt.Println(v)</span><br><span class="line">    fmt.Println(v.X)</span><br><span class="line">    p := &amp;v</span><br><span class="line">    p.X = <span class="number">10</span> <span class="comment">// shortcut of (*p).X = 10</span></span><br><span class="line">    fmt.Println(v)</span><br><span class="line">    v := Vertex&#123;X: <span class="number">5</span>&#125; <span class="comment">// Y = 0</span></span><br><span class="line">    fmt.Println(v)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<ul>
+<li><p>数组<code>[n]T</code>表示拥有<code>n</code>个<code>T</code>类型值的数组。</p>
+<p>初始化<code>primes := [6]int{2,3,5,7,11,13}</code>，数组长度必须为常数</p>
+<p>数组切片<code>var s []int = primes[1: 4]</code>，左闭右开，切片是数组的引用而非复制，<code>len(s)</code>表示切片长度，<code>cap(s)</code>表示切片开头到源数组结尾长度，切片有零值<code>nil</code></p>
+<p>在<code>cap(s)&gt;len(s)</code>时，可以对切片进行拓展，…</p>
+<p>使用<code>make</code>动态分配数组并返回这个数组的切片，如<code>a:=make([]int,0,5)</code>参数分别表示<code>len(a),cap(a)</code>，如果只有一个参数则表示<code>len(a)=cap(a)</code>。</p>
+<p>高维数组</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">board := [][]<span class="keyword">string</span>&#123;</span><br><span class="line">    []<span class="keyword">string</span>&#123;<span class="string">"_"</span>, <span class="string">"_"</span>, <span class="string">"_"</span>&#125;,</span><br><span class="line">    []<span class="keyword">string</span>&#123;<span class="string">"_"</span>, <span class="string">"_"</span>, <span class="string">"_"</span>&#125;,</span><br><span class="line">    []<span class="keyword">string</span>&#123;<span class="string">"_"</span>, <span class="string">"_"</span>, <span class="string">"_"</span>&#125;,</span><br><span class="line">&#125;</span><br><span class="line">board[<span class="number">1</span>][<span class="number">2</span>]...</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<p>  可以使用<code>func append(s []T, vs ...T) []T</code>向切片末尾追加元素并返回新切片，如果<code>cap</code>不够，即源数组太小，则内存会被拓展。(一个能在中间插入的<code>vector</code>)</p>
+<p>  可以使用<code>for i, v := range pow {...}</code>遍历切片。下标或者值可以使用<code>_</code>来代替表示忽略。</p>
+<ul>
+<li><p>映射<code>map[T1]T2</code>将<code>T1</code>类型的值映射到<code>T2</code>，初值为<code>nil</code>。要使用<code>make(map[T1]T2)</code>初始化并返回此映射</p>
+<p>可以使用类数组访问或者结构体初始化映射</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">type</span> Vertex <span class="keyword">struct</span> &#123;</span><br><span class="line">	Lat, Long <span class="keyword">float64</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> m = <span class="keyword">map</span>[<span class="keyword">string</span>]Vertex&#123;</span><br><span class="line">	<span class="string">"Bell Labs"</span>: Vertex&#123;</span><br><span class="line">		<span class="number">40.68433</span>, <span class="number">-74.39967</span>,</span><br><span class="line">	&#125;,</span><br><span class="line">	<span class="string">"Google"</span>: Vertex&#123;</span><br><span class="line">		<span class="number">37.42202</span>, <span class="number">-122.08408</span>,</span><br><span class="line">	&#125;,</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<p>  插入/修改元素<code>m[key] = elem</code>，获取元素<code>elem = m[key]</code>，删除元素<code>delete(m, key)</code>，通过双赋值检测某个键是否存在<code>elem, ok = m[key]</code>，<code>ok</code>表示键<code>key</code>是否在映射<code>m</code>中，为<code>true,false</code></p>
+<ul>
+<li><p>闭包…</p>
+</li>
+<li><p>为结构体定义方法，在函数声明中加入<strong>接收者</strong>参数</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(v Vertex)</span> <span class="title">Abs</span><span class="params">()</span> <span class="title">float64</span></span> &#123;</span><br><span class="line">	<span class="keyword">return</span> math.Sqrt(v.X*v.X + v.Y*v.Y)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<p>  接受者的类型定义与方法声明必须在同一个包内，不能为内建类型声明方法，但可以<strong>使用<code>type</code>给内建类型另一个名字</strong>。</p>
+<p>  可以为<strong>指针接收者</strong><code>*T</code>声明方法，如C语言一样，这样才能对访问接收者内存进行修改。</p>
+<p>  如果同时实现了接收者为<code>T,*T</code>的两个相同方法<code>m</code>，则<code>T.m()</code>将会被<strong>重定向</strong>到<code>(&amp;T).m()</code>调用接收者为<code>*T</code>的方法。如果接收者为<code>*T</code>的方法未实现，则<code>*T.m()</code>会被重定向到<code>(*T).m()</code>。二者不应该混用，而指针接收者版本由于无需复制、能够修改通常更好。</p>
+<ul>
+<li><p>接口，一组方法签名定义的集合。</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">type</span> Abser <span class="keyword">interface</span> &#123;</span><br><span class="line">	Abs() <span class="keyword">float64</span></span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">var</span> a Abser</span><br><span class="line">f := MyFloat(-math.Sqrt2)</span><br><span class="line">v := Vertex&#123;<span class="number">3</span>, <span class="number">4</span>&#125;</span><br><span class="line">a = f  <span class="comment">// 需要接收者MyFloat实现接口Abser内所有函数</span></span><br><span class="line">a = &amp;v <span class="comment">// 需要接收者*Vertex实现接口Abser内所有函数</span></span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<p>  我们无须显式声明某结构体实现了某接口，只需对应接收者实现接口内所有函数，因此没有<code>implements</code>关键字。</p>
+<p>  <strong>接口值在内部看成一个(value, type)的元组。</strong>即具体值，具体类型。</p>
+<p>  具体值为<code>nil</code>的底层方法依然会被调用，因此在实现<code>*T</code>接收者的方法时要注意判空指针。但具体值为<code>nil</code>的接口值自身不为<code>nil</code>。</p>
+<p>  空接口<code>interface{}</code>可保存<strong>任何类型的值</strong>，被用来处理<strong>未知类型的值</strong>。</p>
+<p>  <strong>类型断言</strong><code>t := i. (T)</code>断言接口值<code>i</code>保存了具体类型<code>T</code>，并将类型为<code>T</code>的具体值赋予变量<code>t</code>。如果没有保存，就会运行时错误。因此，类比映射，最好使用<code>t, ok := i. (T)</code>。</p>
+<p>  <strong>类型选择</strong>参考代码如下</p>
+  <figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">do</span><span class="params">(i <span class="keyword">interface</span>&#123;&#125;)</span></span> &#123;</span><br><span class="line">	<span class="keyword">switch</span> v := i.(<span class="keyword">type</span>) &#123;</span><br><span class="line">	<span class="keyword">case</span> <span class="keyword">int</span>:</span><br><span class="line">		fmt.Printf(<span class="string">"Twice %v is %v\n"</span>, v, v*<span class="number">2</span>)</span><br><span class="line">	<span class="keyword">case</span> <span class="keyword">string</span>:</span><br><span class="line">		fmt.Printf(<span class="string">"%q is %v bytes long\n"</span>, v, <span class="built_in">len</span>(v))</span><br><span class="line">	<span class="keyword">default</span>:</span><br><span class="line">		fmt.Printf(<span class="string">"I don't know about type %T!\n"</span>, v)</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>  实现<code>Stringer</code>接口<code>type Stringer interface{ String() string }</code></p>
+<p>  可以将自身转为字符串使用<code>Println/Printf</code>输出。</p>
+<p>  使用<code>error</code>值表示错误状态<code>type error interface { Error() string }</code></p>
+<p>  通常函数会返回<code>error</code>值，我们要：</p>
+<p>  <code>if err != nil { fmt.Printf(&quot;%v&quot;, err) } else {...}</code></p>
+<ul>
+<li><p>Go程(goroutine)</p>
+<p><code>go f(x, y, z)</code>启动一个新的Go程并执行<code>f(x, y, z)</code></p>
+<p><strong>信道</strong>使用<code>ch := make(chan T)</code>创建</p>
+<p>可以使用<code>ch &lt;- v</code>将值<code>v</code>送入信道<code>ch</code>，可以使用<code>v := &lt;-ch</code>从信道<code>ch</code>接收值并赋予<code>v</code>。</p>
+<p>信道可以有缓冲区，当缓冲区满时，向信道发送数据的Go程被阻塞；当缓冲区空时，从信道接收数据的Go程被阻塞。</p>
+<p>发送者可以通过<code>close(c)</code>关闭信道，对于接收者而言，<code>v, ok := &lt;-c</code>可以判断信道是否被关闭。接收者可以用<code>for i := range c</code>不断从信道接受数据直到信道被关闭，而发送者关闭信道也主要是为了<strong>接收者可以退出接收循环</strong>。</p>
+<p><code>select</code>语句使得一个Go程可以等待多个通信操作，会被阻塞到某个分支可以继续运行。</p>
+</li>
+</ul>
+
+    </div>
+
+    
+    
+    
+        
+      
+
+      <footer class="post-footer">
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-next post-nav-item">
+              
+                <a href="/2019/10/11/rCore源码阅读-rCore初始化/" rel="next" title="rCore源码阅读-rCore初始化">
+                  <i class="fa fa-chevron-left"></i> rCore源码阅读-rCore初始化
+                </a>
+              
+            </div>
+
+            <span class="post-nav-divider"></span>
+
+            <div class="post-nav-prev post-nav-item">
+              
+                <a href="/2019/10/18/VR迷宫04-迷宫生成与渲染优化/" rel="prev" title="VR迷宫04-迷宫生成与渲染优化">
+                  VR迷宫04-迷宫生成与渲染优化 <i class="fa fa-chevron-right"></i>
+                </a>
+              
+            </div>
+          </div>
+        
+      </footer>
+    
+  </div>
+  
+  
+  
+  </article>
+
+  </div>
+
+
+          </div>
+          
+
+        </div>
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+        
+        
+        
+        
+      
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">shinbokuow</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+  <nav class="site-state motion-element">
+      <div class="site-state-item site-state-posts">
+        
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">17</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+    
+  </nav>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2019</span>
+  <span class="with-love" id="animate">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">shinbokuow</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io" class="theme-link" rel="noopener" target="_blank">Hexo</a> 强力驱动 v3.9.0</div>
+  <span class="post-meta-divider">|</span>
+  <div class="theme-info">主题 – <a href="https://theme-next.org" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a> v7.4.0</div>
+
+        
+
+
+
+
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+  </div>
+
+  
+
+
+  <script src="/lib/anime.min.js?v=3.1.0"></script>
+  <script src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  <script src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+<script src="/js/utils.js?v=7.4.0"></script><script src="/js/motion.js?v=7.4.0"></script>
+<script src="/js/schemes/muse.js?v=7.4.0"></script>
+<script src="/js/next-boot.js?v=7.4.0"></script>
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
