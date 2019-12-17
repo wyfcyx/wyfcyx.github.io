@@ -55,18 +55,18 @@
   };
 </script>
 
-  <meta name="description" content="忙里偷闲看一下《线性代数本质》吧，据说做得挺好的。人家这个可视化水平着实有点厉害。">
+  <meta name="description" content="最近要用 Unity 开发一款 Android VR 游戏，于是又开始折腾环境了。">
 <meta property="og:type" content="article">
-<meta property="og:title" content="《线性代数本质》笔记">
-<meta property="og:url" content="http://yoursite.com/2019/11/17/《线性代数本质》笔记/index.html">
+<meta property="og:title" content="Unity Android 打包环境配置">
+<meta property="og:url" content="http://yoursite.com/2019/12/17/Unity-Android-打包环境配置/index.html">
 <meta property="og:site_name" content="Hexo">
-<meta property="og:description" content="忙里偷闲看一下《线性代数本质》吧，据说做得挺好的。人家这个可视化水平着实有点厉害。">
+<meta property="og:description" content="最近要用 Unity 开发一款 Android VR 游戏，于是又开始折腾环境了。">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:updated_time" content="2019-11-17T02:29:55.288Z">
+<meta property="og:updated_time" content="2019-12-17T08:29:28.535Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="《线性代数本质》笔记">
-<meta name="twitter:description" content="忙里偷闲看一下《线性代数本质》吧，据说做得挺好的。人家这个可视化水平着实有点厉害。">
-  <link rel="canonical" href="http://yoursite.com/2019/11/17/《线性代数本质》笔记/">
+<meta name="twitter:title" content="Unity Android 打包环境配置">
+<meta name="twitter:description" content="最近要用 Unity 开发一款 Android VR 游戏，于是又开始折腾环境了。">
+  <link rel="canonical" href="http://yoursite.com/2019/12/17/Unity-Android-打包环境配置/">
 
 
 <script id="page-configurations">
@@ -80,7 +80,7 @@
   };
 </script>
 
-  <title>《线性代数本质》笔记 | Hexo</title>
+  <title>Unity Android 打包环境配置 | Hexo</title>
   
 
 
@@ -195,7 +195,7 @@
   
   
   <div class="post-block post">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/11/17/《线性代数本质》笔记/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/12/17/Unity-Android-打包环境配置/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="shinbokuow">
@@ -207,7 +207,7 @@
       <meta itemprop="name" content="Hexo">
     </span>
       <header class="post-header">
-        <h1 class="post-title" itemprop="name headline">《线性代数本质》笔记
+        <h1 class="post-title" itemprop="name headline">Unity Android 打包环境配置
 
           
         </h1>
@@ -223,7 +223,7 @@
                 
               
 
-              <time title="创建时间：2019-11-17 10:20:18 / 修改时间：10:29:55" itemprop="dateCreated datePublished" datetime="2019-11-17T10:20:18+08:00">2019-11-17</time>
+              <time title="创建时间：2019-12-17 16:17:56 / 修改时间：16:29:28" itemprop="dateCreated datePublished" datetime="2019-12-17T16:17:56+08:00">2019-12-17</time>
             </span>
           
             
@@ -242,16 +242,14 @@
     <div class="post-body" itemprop="articleBody">
 
       
-        <p>忙里偷闲看一下《线性代数本质》吧，据说做得挺好的。人家这个可视化水平着实有点厉害。</p>
+        <p>最近要用 Unity 开发一款 Android VR 游戏，于是又开始折腾环境了。</p>
 <a id="more"></a>
-<h2 id="01-向量究竟是什么"><a href="#01-向量究竟是什么" class="headerlink" title="01 - 向量究竟是什么"></a>01 - 向量究竟是什么</h2><p>作者提出了两个视角：</p>
-<ul>
-<li>物理专业学生：向量是空间中的箭头；长度，方向决定一个向量。</li>
-<li>计算机专业学生：向量只是一个数字列表。</li>
-<li>数学家：向量是支持加法和数乘运算的任何东西。</li>
-</ul>
-<p>线性代数中，通常向量的起点是原点，因此向量可以描述从原点移动到另一个点的过程，向量与目标点一一对应。</p>
-<p>向量的加法、数乘</p>
+<p>我的 Unity 版本是最近新下载的 <script type="math/tex">2020.1.0a14.1541</script> ，还不是稳定版本，当时脑抽就下载了这个版本，先这样用吧。</p>
+<p>首先是依据<a href="https://blog.csdn.net/qq_15020543/article/details/80525743" target="_blank" rel="noopener">这位老兄的经验</a>进行配置。有一点不同的是，我的 Android SDK Manager 已经被 Android Studio 魔改了，因此不能在 Android Studio 外面打开，于是我在 Android Studio 里面把要下载的组件下载全了。由于 Google VR SDK 要求在 api 19 下开发，因此主要下载的那些相关的 image 。</p>
+<p>这里复议一下，感觉设置 keystone 好像也没什么用？不过我还是设置了。</p>
+<p>接着就是按照<a href="https://developers.google.com/vr/develop/unity/get-started-android" target="_blank" rel="noopener">Google VR Unity SDK</a>进行配置。这里我们选择 Cardboard 。如果你某一步做错了的话，不要慌，删掉项目重新来做一次就好了。</p>
+<p>然后就是连接上手机，启用调试模式，Build &amp; Run。发现卡在一步 Building Gradle Projects . 尝试找了一些方法都没用，这一步应该是在下 gradle ，然而并没有指定本地路径的地方，只能打开 ss ，等就硬等。只需要等这一次之后就不必再等了。</p>
+<p>成功在手机上跑起来了 Google VR SDK 的 Demo ，感觉良好！</p>
 
     </div>
 
@@ -268,8 +266,8 @@
           <div class="post-nav">
             <div class="post-nav-next post-nav-item">
               
-                <a href="/2019/11/16/优雅访问Coursera/" rel="next" title="优雅访问Coursera">
-                  <i class="fa fa-chevron-left"></i> 优雅访问Coursera
+                <a href="/2019/12/17/IndexFS-阅读笔记/" rel="next" title="IndexFS 阅读笔记">
+                  <i class="fa fa-chevron-left"></i> IndexFS 阅读笔记
                 </a>
               
             </div>
@@ -277,10 +275,6 @@
             <span class="post-nav-divider"></span>
 
             <div class="post-nav-prev post-nav-item">
-              
-                <a href="/2019/12/06/Gitalk-in-Gitbook/" rel="prev" title="Gitalk in Gitbook">
-                  Gitalk in Gitbook <i class="fa fa-chevron-right"></i>
-                </a>
               
             </div>
           </div>
@@ -329,8 +323,6 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#01-向量究竟是什么"><span class="nav-number">1.</span> <span class="nav-text">01 - 向量究竟是什么</span></a></li></ol></div>
-        
       </div>
       <!--/noindex-->
 
@@ -429,56 +421,6 @@
 
   
 
-  
-    
-      
-<script type="text/x-mathjax-config">
-
-  MathJax.Hub.Config({
-    tex2jax: {
-      inlineMath: [ ['$', '$'], ['\\(', '\\)'] ],
-      processEscapes: true,
-      skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
-    },
-    TeX: {
-      equationNumbers: {
-        autoNumber: 'AMS'
-      }
-    }
-  });
-
-  MathJax.Hub.Register.StartupHook('TeX Jax Ready', function() {
-    MathJax.InputJax.TeX.prefilterHooks.Add(function(data) {
-      if (data.display) {
-        var next = data.script.nextSibling;
-        while (next && next.nodeName.toLowerCase() === '#text') {
-          next = next.nextSibling;
-        }
-        if (next && next.nodeName.toLowerCase() === 'br') {
-          next.parentNode.removeChild(next);
-        }
-      }
-    });
-  });
-
-  MathJax.Hub.Queue(function() {
-    var all = MathJax.Hub.getAllJax(), i;
-    for (i = 0; i < all.length; i += 1) {
-      element = document.getElementById(all[i].inputID + '-Frame').parentNode;
-      if (element.nodeName.toLowerCase() == 'li') {
-        element = element.parentNode;
-      }
-      element.classList.add('has-jax');
-    }
-  });
-</script>
-<script>
-  NexT.utils.getScript('//cdn.jsdelivr.net/npm/mathjax@2/MathJax.js?config=TeX-AMS-MML_HTMLorMML', () => {
-    MathJax.Hub.Typeset();
-  }, window.MathJax);
-</script>
-
-    
   
 
   
