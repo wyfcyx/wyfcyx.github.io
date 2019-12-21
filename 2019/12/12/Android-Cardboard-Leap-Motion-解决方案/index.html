@@ -62,7 +62,7 @@
 <meta property="og:site_name" content="Hexo">
 <meta property="og:description" content="这学期做的 VR 大作业，想使用 Leap Motion 提供的手势识别进行操控，但是没有各种 Headset 可以用（对，说的就是你俩 HTC 和 Oculus）。然而人家 Leap Motion 目前只提供 PC 和上面两兄弟的支持。那我们只有 Cardboard 怎么办呢？这里稍微记录一下。">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:updated_time" content="2019-12-12T13:58:37.119Z">
+<meta property="og:updated_time" content="2019-12-20T04:51:22.681Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Android + Cardboard + Leap Motion 解决方案">
 <meta name="twitter:description" content="这学期做的 VR 大作业，想使用 Leap Motion 提供的手势识别进行操控，但是没有各种 Headset 可以用（对，说的就是你俩 HTC 和 Oculus）。然而人家 Leap Motion 目前只提供 PC 和上面两兄弟的支持。那我们只有 Cardboard 怎么办呢？这里稍微记录一下。">
@@ -223,11 +223,19 @@
                 
               
 
-              <time title="创建时间：2019-12-12 21:38:27 / 修改时间：21:58:37" itemprop="dateCreated datePublished" datetime="2019-12-12T21:38:27+08:00">2019-12-12</time>
+              <time title="创建时间：2019-12-12 21:38:27" itemprop="dateCreated datePublished" datetime="2019-12-12T21:38:27+08:00">2019-12-12</time>
             </span>
           
             
 
+            
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2019-12-20 12:51:22" itemprop="dateModified" datetime="2019-12-20T12:51:22+08:00">2019-12-20</time>
+              </span>
             
           
 
@@ -244,9 +252,58 @@
       
         <p>这学期做的 VR 大作业，想使用 Leap Motion 提供的手势识别进行操控，但是没有各种 Headset 可以用（对，说的就是你俩 HTC 和 Oculus）。然而人家 Leap Motion 目前只提供 PC 和上面两兄弟的支持。那我们只有 Cardboard 怎么办呢？这里稍微记录一下。</p>
 <a id="more"></a>
-<p>我们在 PC 上利用 Leap Motion SDK 获取手势数据，然后传给 Android。传的方式是：用 USB 将 PC 与 Android 连接起来，然后在 PC 端用 adb 建立连接后，Android 只需作为服务器监听 localhost 的一个端口，同时 PC 端作为客户端同样访问 localhost 的一个端口传数据即可。</p>
+<p>我们在 PC 上利用 Leap Motion SDK 获取手势数据，然后传给 Android。传的方式参考了<a href="https://blog.csdn.net/jakemiao/article/details/17270785?locationNum=7&amp;fps=1" target="_blank" rel="noopener">这里</a>的思路：用 USB 将 PC 与 Android 连接起来，然后在 PC 端用 adb 建立连接后，Android 只需作为服务器监听 localhost 的一个端口，同时 PC 端作为客户端同样访问 localhost 的一个端口传数据即可。</p>
 <p>目前 PC 端使用 Python 语言实现，Android 端使用 Unity 即 C# 语言实现。注意这里的 Unity 没有 Leap Motion 支持。因而它获取手势数据完全依赖于 PC 端的传入。如何选择适当的数据传入，并重现手的模型看起来是一个问题。</p>
 <p>用户体验方面，我们在某宝上买了一个 Leap Motion 支架，它本来是为两个 Headset 准备的，但我们将其如法炮制到 Cardboard 上。目前几可以假乱真。</p>
+<h2 id="基于-USB-Unity-实现-Android-与-PC-通信"><a href="#基于-USB-Unity-实现-Android-与-PC-通信" class="headerlink" title="基于 USB+Unity 实现 Android 与 PC 通信"></a>基于 USB+Unity 实现 Android 与 PC 通信</h2><p>我们这里先实现上述任务的一个简单版本，实现 Android 与 PC 的通信即可。</p>
+<p>我们基于<a href="https://blog.csdn.net/weixin_41765385/article/details/80932539" target="_blank" rel="noopener">这份代码</a>进行改编。由于这里重点不在于 Socket 的使用，而且我也没搞懂，因此并不打算详细介绍。</p>
+<h3 id="Android-Server"><a href="#Android-Server" class="headerlink" title="Android Server"></a>Android Server</h3><p>在 Unity 新建一个 EmptyObject 名为 Server 并添加名为 ServerController 的脚本如下：</p>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">using</span> System;</span><br><span class="line"><span class="keyword">using</span> System.Collections;</span><br><span class="line"><span class="keyword">using</span> System.Collections.Generic;</span><br><span class="line"><span class="keyword">using</span> System.Net;</span><br><span class="line"><span class="keyword">using</span> System.Net.Sockets;</span><br><span class="line"><span class="keyword">using</span> System.Text;</span><br><span class="line"><span class="keyword">using</span> UnityEngine;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title">ServerController</span> : <span class="title">MonoBehaviour</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">const</span> <span class="keyword">int</span> BUFFER_SIZE = <span class="number">8192</span>;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">byte</span>[] receiveBuffer;</span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">Start</span>(<span class="params"></span>)</span></span><br><span class="line"><span class="function"></span>    &#123;</span><br><span class="line">        receiveBuffer = <span class="keyword">new</span> <span class="keyword">byte</span>[BUFFER_SIZE];</span><br><span class="line">        </span><br><span class="line">        Socket serverSocket = <span class="keyword">new</span> Socket(</span><br><span class="line">            AddressFamily.InterNetwork,</span><br><span class="line">            SocketType.Stream,</span><br><span class="line">            ProtocolType.Tcp</span><br><span class="line">        );</span><br><span class="line">        IPAddress iPAddress = IPAddress.Parse(<span class="string">"127.0.0.1"</span>);</span><br><span class="line">        IPEndPoint Point = <span class="keyword">new</span> IPEndPoint(iPAddress, <span class="number">8888</span>);</span><br><span class="line">        </span><br><span class="line">        serverSocket.Bind(Point);</span><br><span class="line">        </span><br><span class="line">        serverSocket.Listen(<span class="number">10</span>);</span><br><span class="line"></span><br><span class="line">        Debug.Log(<span class="string">"begin accepting!"</span>);</span><br><span class="line">        serverSocket.BeginAccept(AcceptCallBack, serverSocket);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">AcceptCallBack</span>(<span class="params">IAsyncResult ar</span>)</span></span><br><span class="line"><span class="function"></span>    &#123;</span><br><span class="line">        Socket serverSocket = ar.AsyncState <span class="keyword">as</span> Socket;</span><br><span class="line">        Socket clientSocket = serverSocket.EndAccept(ar);</span><br><span class="line"></span><br><span class="line">        <span class="keyword">string</span> msgSend = <span class="string">"Hello world!"</span>;</span><br><span class="line">        <span class="keyword">byte</span>[] sendBuffer = Encoding.ASCII.GetBytes(msgSend);</span><br><span class="line">        clientSocket.Send(sendBuffer);</span><br><span class="line"></span><br><span class="line">        clientSocket.BeginReceive(receiveBuffer, <span class="number">0</span>, <span class="number">1024</span>, SocketFlags.None, ReceiveCallBack, clientSocket);</span><br><span class="line"></span><br><span class="line">        serverSocket.BeginAccept(AcceptCallBack, serverSocket);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">ReceiveCallBack</span>(<span class="params">IAsyncResult ar</span>)</span></span><br><span class="line"><span class="function"></span>    &#123;</span><br><span class="line">        Socket clientSocket = <span class="literal">null</span>;</span><br><span class="line">        <span class="keyword">try</span></span><br><span class="line">        &#123;</span><br><span class="line">            clientSocket = ar.AsyncState <span class="keyword">as</span> Socket;</span><br><span class="line">            <span class="keyword">int</span> count = clientSocket.EndReceive(ar);</span><br><span class="line">            <span class="keyword">string</span> msgReceive = Encoding.ASCII.GetString(receiveBuffer, <span class="number">0</span>, count);</span><br><span class="line">            Debug.Log(<span class="string">"client message: "</span> + msgReceive);</span><br><span class="line">            clientSocket.BeginReceive(receiveBuffer, <span class="number">0</span>, <span class="number">1024</span>, SocketFlags.None, ReceiveCallBack, clientSocket);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">catch</span> (Exception)</span><br><span class="line">        &#123;</span><br><span class="line">            Debug.Log(<span class="string">"Something wrong in ReceiveCallBack!"</span>);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>这里是利用 Socket 实现了一个典型的监听在 127.0.0.1:8888 上的异步 TCP 服务器放在 Android 端。我们将其初始化流程放在 Start 中。希望 Unity 能与 C# 原版的 Socket 友好相处 ^_^ 。</p>
+<p>我们只需实现两个回调函数 <code>AcceptCallBack, ReceiveCallBack</code> 即可。在接收到客户端发来的信息之后将其用 log 输出到 Unity 。</p>
+<h3 id="PC-client"><a href="#PC-client" class="headerlink" title="PC client"></a>PC client</h3><p>接下来是 PC 客户端。</p>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">using</span> System;</span><br><span class="line"><span class="keyword">using</span> System.Net;</span><br><span class="line"><span class="keyword">using</span> System.Net.Sockets;</span><br><span class="line"><span class="keyword">using</span> System.Text;</span><br><span class="line"></span><br><span class="line"><span class="keyword">namespace</span> <span class="title">client</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">class</span> <span class="title">Program</span></span><br><span class="line">    &#123;</span><br><span class="line">        <span class="function"><span class="keyword">static</span> <span class="keyword">void</span> <span class="title">Main</span>(<span class="params"><span class="keyword">string</span>[] args</span>)</span></span><br><span class="line"><span class="function"></span>        &#123;</span><br><span class="line">            Socket clientSocket = <span class="keyword">new</span> Socket(</span><br><span class="line">                AddressFamily.InterNetwork,</span><br><span class="line">                SocketType.Stream,</span><br><span class="line">                ProtocolType.Tcp);</span><br><span class="line">           clientSocket.Connect(<span class="keyword">new</span> IPEndPoint(IPAddress.Parse(<span class="string">"127.0.0.1"</span>), <span class="number">7777</span>));</span><br><span class="line"></span><br><span class="line">           <span class="keyword">byte</span>[] dataReceive = <span class="keyword">new</span> <span class="keyword">byte</span>[<span class="number">8192</span>];</span><br><span class="line">           <span class="keyword">int</span> count = clientSocket.Receive(dataReceive);</span><br><span class="line">           <span class="keyword">string</span> msgReceive = Encoding.ASCII.GetString(dataReceive, <span class="number">0</span>, count);</span><br><span class="line">           Console.WriteLine(<span class="string">"received from server: "</span> + msgReceive);</span><br><span class="line"></span><br><span class="line">           <span class="keyword">string</span> str = Console.ReadLine();</span><br><span class="line">           <span class="keyword">while</span> (<span class="literal">true</span>)</span><br><span class="line">           &#123;</span><br><span class="line">               <span class="keyword">byte</span>[] dataSend = Encoding.ASCII.GetBytes(str);</span><br><span class="line">               clientSocket.Send(dataSend);</span><br><span class="line">               str = Console.ReadLine();</span><br><span class="line">               <span class="keyword">if</span> (str.Equals(<span class="string">"exit"</span>))</span><br><span class="line">               &#123;</span><br><span class="line">                   <span class="keyword">break</span>;</span><br><span class="line">               &#125;</span><br><span class="line">           &#125;</span><br><span class="line"></span><br><span class="line">           clientSocket.Close();</span><br><span class="line">           Console.ReadLine();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>简单的 TCP 客户端，连接到服务器 127.0.0.1:7777 。两个端口号是由下面的 <code>adb forward</code> 命令来设定的。这里为了方便直接写死。</p>
+<h3 id="流程"><a href="#流程" class="headerlink" title="流程"></a>流程</h3><ol>
+<li><p>使用 USB 线连接 Android 和 PC ，打开调试模式</p>
+</li>
+<li><p>使用 adb 输入在命令行中输入</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">adb forward tcp:7777 tcp:8888</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>使用 adb 监控 Android 的调试信息，我们只关注 Unity 的输出</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">adb logcat -s Unity</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>在 Android 上运行 Unity 程序</p>
+</li>
+<li><p>在 PC 上运行客户端</p>
+</li>
+</ol>
+<p>我们惊喜的看到，Android server 已经收到了 PC client 传过来的消息！</p>
+<h2 id="Json-解析"><a href="#Json-解析" class="headerlink" title="Json 解析"></a>Json 解析</h2><p>我们已经将 IDE 换成了 Rider ，就很舒服，可以直接用 Nuget 安装 Json.NET 了。</p>
+<p>从工具栏中的 Tools -&gt; NuGet -&gt; Manage Nuget Packages For Solution ，随后直接安装最热门的 Newtonsoft.JSON 即可。</p>
+<p>使用<a href="https://www.newtonsoft.com/json/help/html/QueryingLINQtoJSON.htm" target="_blank" rel="noopener">这里的代码</a> ，解析功能正常工作。</p>
+<h2 id="Multithreading-in-Unity"><a href="#Multithreading-in-Unity" class="headerlink" title="Multithreading in Unity"></a>Multithreading in Unity</h2><p>今天一整天都在纠结于 Unity 的线程安全问题（以及看一些奇怪的东西，虽然我已经将他们全部删掉了）</p>
+<p>找了很多资料，被大家一致认同的说法是：</p>
+<ul>
+<li><p>Unity 在有些地方会使用多线程充分利用多核 CPU</p>
+</li>
+<li><p>但是这个细节并不暴露给开发者，你所写的那些基于 Event System 被 Unity  在合适的时机调用的代码全部在 Main thread 上运行</p>
+<p>比如 Update, FixedUpdate 那些…</p>
+</li>
+<li><p>由于 Unity 是这样使用这些你写的代码的，因此你所能够在代码中调用到的 Unity API 都不是线程安全的，甚至为了保证安全性，如果你另开一个线程在其中比方说修改一个 GameObject 的 Position ，Unity 都会抛出一个 Exception</p>
+</li>
+</ul>
+<p>因此对开发者来说应该可以认为 Unity 所做的事情仅仅是单线程的。</p>
+<p>后来我将上面的代码改了一下，在异步回调接收到客户端传来的消息后将一个 Text Label 的文字修改，但是并未触发 Exception 。（后来修改一个3D Text 的文字就闪退了…说明我们还是别在这里做一些危险的事情）</p>
+<p>今天看了一下异步的机制，在<a href="https://blog.stephencleary.com/2013/11/there-is-no-thread.html" target="_blank" rel="noopener">这里</a>比较详细的介绍了异步的底层实现。作者的主要观点是在异步机制中，并不会多出一个“牺牲品”线程被阻塞。而是通过中断，由 OS 来提醒一个 thread pool 线程去调用异步回调函数。不知道中间又经历了怎样复杂的过程，从结果来看，Unity 认为异步回调函数依旧是在 Main thread 上运行的。</p>
+<p>我们暂时忽略 Unity 的 Job System 那一套理论，而是绝不吝惜开新线程，反正这种规模又不会带来什么上下文切换开销。</p>
+<p>从目前看来，最简单的实现方式当属沿用上面的异步回调方式，在里面，每读到 PC 传来的一帧，就将其保存下来；随后在主线程的 Main thread 中，在 Update 中，读取保存的那一帧并进行相应的修改。</p>
+<p>如果上面这种方法没有线程安全问题（我现在仍在怀疑）那可再好不过了。但是如果出了问题，我们仍可以中规中矩地新加一个服务器线程，并通过锁的方式与主线程安全地共享数据。</p>
+<p>对于一个懒人来讲， Unity 认为安全我们就认为安全，因此姑且先按照异步的方式实现试一试。</p>
+<p>记录一下这些可能有用的回答：</p>
+<p><a href="https://stackoverflow.com/questions/41330771/use-unity-api-from-another-thread-or-call-a-function-in-the-main-thread/54184457#54184457" target="_blank" rel="noopener">1</a></p>
+<p><a href="https://stackoverflow.com/questions/29596926/how-to-change-ui-or-gameobject-with-thread-in-unity" target="_blank" rel="noopener">2</a></p>
+<h2 id="LeapMotion-Rendering"><a href="#LeapMotion-Rendering" class="headerlink" title="LeapMotion Rendering"></a>LeapMotion Rendering</h2><p>从 head mounted 视角来看，$x$ 轴正方向为左，$y$ 轴正方向为前，$z$ 轴正方向为下。同时，其单位为毫米 (mm) 。</p>
 
     </div>
 
@@ -324,6 +381,8 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#基于-USB-Unity-实现-Android-与-PC-通信"><span class="nav-number">1.</span> <span class="nav-text">基于 USB+Unity 实现 Android 与 PC 通信</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Android-Server"><span class="nav-number">1.1.</span> <span class="nav-text">Android Server</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#PC-client"><span class="nav-number">1.2.</span> <span class="nav-text">PC client</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#流程"><span class="nav-number">1.3.</span> <span class="nav-text">流程</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Json-解析"><span class="nav-number">2.</span> <span class="nav-text">Json 解析</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Multithreading-in-Unity"><span class="nav-number">3.</span> <span class="nav-text">Multithreading in Unity</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#LeapMotion-Rendering"><span class="nav-number">4.</span> <span class="nav-text">LeapMotion Rendering</span></a></li></ol></div>
+        
       </div>
       <!--/noindex-->
 
@@ -337,7 +396,7 @@
         
           <a href="/archives/">
         
-          <span class="site-state-item-count">22</span>
+          <span class="site-state-item-count">23</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>

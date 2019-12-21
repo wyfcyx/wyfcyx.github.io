@@ -62,7 +62,7 @@
 <meta property="og:site_name" content="Hexo">
 <meta property="og:description" content="阅读一下这部分文档了解一下 Unity 引擎的运作方式。">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:updated_time" content="2019-12-17T12:41:45.423Z">
+<meta property="og:updated_time" content="2019-12-18T08:22:51.975Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Unity Script 文档阅读">
 <meta name="twitter:description" content="阅读一下这部分文档了解一下 Unity 引擎的运作方式。">
@@ -223,11 +223,19 @@
                 
               
 
-              <time title="创建时间：2019-12-17 19:55:07 / 修改时间：20:41:45" itemprop="dateCreated datePublished" datetime="2019-12-17T19:55:07+08:00">2019-12-17</time>
+              <time title="创建时间：2019-12-17 19:55:07" itemprop="dateCreated datePublished" datetime="2019-12-17T19:55:07+08:00">2019-12-17</time>
             </span>
           
             
 
+            
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2019-12-18 16:22:51" itemprop="dateModified" datetime="2019-12-18T16:22:51+08:00">2019-12-18</time>
+              </span>
             
           
 
@@ -271,9 +279,62 @@
 <figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// by name</span></span><br><span class="line">GameObject player;</span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">Start</span>(<span class="params"></span>) </span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    player = GameObject.Find(<span class="string">"MainHeroCharacter"</span>);</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// by tag</span></span><br><span class="line">GameObject player;</span><br><span class="line">GameObject[] enemies;</span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">Start</span>(<span class="params"></span>) </span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    player = GameObject.FindWithTag(<span class="string">"Player"</span>);</span><br><span class="line">    enemies = GameObject.FindGameObjectsWithTag(<span class="string">"Enemy"</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 </li>
 </ul>
-<h3 id="Event-Functions"><a href="#Event-Functions" class="headerlink" title="Event Functions"></a>Event Functions</h3><p>太懒了，先看到这里吧。</p>
+<h3 id="Event-Functions"><a href="#Event-Functions" class="headerlink" title="Event Functions"></a>Event Functions</h3><p>Unity 通过 event functions 与 Script 进行交互。当对应的 event 发生时，Unity 调用 script 中的 event function ，并在返回后将控制权收回。</p>
+<p>常用、重要的事件有以下几种：</p>
+<ul>
+<li><p>周期更新事件</p>
+<p>在每一帧绘制之前修改 GameObject 的状态、行为；</p>
+<ol>
+<li><p>Update</p>
+<p>最常用的是 Update . 在每一帧被绘制之前，以及动画被计算之前被调用。</p>
+</li>
+<li><p>FixedUpdate</p>
+<p>与帧绘制一样，物理引擎也是每隔一段时间更新一下状态，而每次其更新之前会调用 FixedUpdate 函数。</p>
+<p>物理引擎更新与帧绘制的频率并不相同。物理引擎的更新频率会更高一下。</p>
+</li>
+<li><p>LateUpdate</p>
+<p>已经调用了所有 Script 的 Update, FixedUpdate 更新了对应的 GameObject 的状态，同时所有的动画计算已经完成，在开始正式绘制之前会调用 LateUpdate 。</p>
+<p>一个典型应用场景是更新跟随物体的摄像头，或覆盖动画计算。</p>
+</li>
+</ol>
+</li>
+<li><p>初始化事件</p>
+<ol>
+<li><p>Awake</p>
+<p>将在 Scene 载入时对于每个 Script 进行调用</p>
+</li>
+<li><p>Start</p>
+<p>将在绘制第一帧、或进行第一次物理引擎更新之前对于每个 Script 进行调用</p>
+<p>注意，所有 Script 的 Awake 调用返回后，才会开始调用 Start</p>
+</li>
+</ol>
+</li>
+<li><p>GUI 事件</p>
+<p>OnGUI ，用来更新 GUI ，用到的时候再说</p>
+</li>
+<li><p>物理引擎事件</p>
+<p>OnCollisionEnter/Stay/Exit ，OnTriggerEnter/Stay/Exit 这些。</p>
+</li>
+</ul>
+<h3 id="Time-and-Framerate-Management"><a href="#Time-and-Framerate-Management" class="headerlink" title="Time and Framerate Management"></a>Time and Framerate Management</h3><p>绘制每一帧的时间取决于 CPU 负载，因此并不是恒定的。我们可以用 <code>Time.deltaTime</code> 来获得上一帧绘制所需的时间。（仔细想一想，这还蛮有意思的，当涉及到多人同步的时候就更有趣了）</p>
+<p>然而，Unity 的物理引擎则是以恒定的时间间隔更新的。你可以通过 <code>Time.fixedDeltaTime</code> 来查看并修改它，但默认值通常不必修改。</p>
+<p>下面提到有可能物理引擎更新比帧绘制快会导致问题，从而可以让物理引擎跑的慢一点…没太看懂。</p>
+<p>我们可以通过设定 <code>Time.timeScale</code> 来改变游戏时间流逝的速度（加急名单警告）。</p>
+<p>同时 Unity 还提供了方便的定期自动截图功能。</p>
+<h3 id="Creating-and-Destroying-GameObjects"><a href="#Creating-and-Destroying-GameObjects" class="headerlink" title="Creating and Destroying GameObjects"></a>Creating and Destroying GameObjects</h3><p>使用 <code>Instantiate</code> 新建 GameObject 。通常我们用 public 的成员将一个 prefab 拖进来用来后续的新建，这样它的各个 Component 也能复制进来。</p>
+<p>我们还可以使用 <code>Destroy</code> 来回收一个 GameObject 或 Component 。</p>
+<h3 id="Coroutine"><a href="#Coroutine" class="headerlink" title="Coroutine"></a>Coroutine</h3><p>即协程。</p>
+<p>首先，我们可以将在 Update 中每绘制一帧之前做的更新放在协程中。</p>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// Coroutine</span></span><br><span class="line"><span class="function">IEnumerator <span class="title">Fade</span>(<span class="params"></span>) </span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">float</span> ft = <span class="number">1f</span>; ft &gt;= <span class="number">0</span>; ft -= <span class="number">0.1f</span>) </span><br><span class="line">    &#123;</span><br><span class="line">        Color c = renderer.material.color;</span><br><span class="line">        c.a = ft;</span><br><span class="line">        renderer.material.color = c;</span><br><span class="line">        <span class="keyword">yield</span> <span class="keyword">return</span> <span class="literal">null</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// Start it</span></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">Update</span>(<span class="params"></span>)</span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (Input.GetKeyDown(<span class="string">"f"</span>)) </span><br><span class="line">    &#123;</span><br><span class="line">        StartCoroutine(<span class="string">"Fade"</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>这里 <code>yield</code> 就会将控制权交还给 Unity 。但是下一帧中还会从上一帧中离开的地方继续执行。这样就跟放在 Update 中一样每帧更新一次了。</p>
+<p>对于那些定期更新但不能过于频繁如每帧更新一次的任务而言，我们也可以放在协程中，将 <code>yield</code> 语句变为：</p>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">yield</span> return new <span class="title">WaitForSeconds</span>(<span class="params"><span class="number">.1</span>f</span>)</span>;</span><br></pre></td></tr></table></figure>
+<h3 id="Namespace"><a href="#Namespace" class="headerlink" title="Namespace"></a>Namespace</h3><p>当类的名字容易产生冲突时，我们可以用名字空间 namespace 进行管理。这样添加脚本的方式似乎也与之前略有差别。等到项目真到了那种大小再说吧。</p>
+<h3 id="Attributes"><a href="#Attributes" class="headerlink" title="Attributes"></a>Attributes</h3><p>与 C# 一样可以加一些 Attributes 。不过现在还没有什么值得注意的地方。</p>
+<p>后面的部分都有些过于复杂了，目前可能还用不到，就先不看了。</p>
 <h2 id="C-Job-System"><a href="#C-Job-System" class="headerlink" title="C# Job System"></a>C# Job System</h2><p>如果我们仅仅使用线程池来维护，给每个任务分配一个新线程，在 Unity 中同时 Ready 的线程会轻易超出 CPU 的硬件线程数，从而导致频繁的切换线程，带来不菲的上下文切换开销。</p>
 <p>因此使用 Job System ，一个 Job System 管理若干 worker threads ，每个 worker thread 对应 CPU 的一个硬件线程，从而不会频繁切换线程。同时，我们使用 job queue 来维护所有的 job ，而 worker thread 从 job queue 中取出 job 来执行。</p>
+<p>我们可以使用 NativeContainer 来存放主线程与 Job 共享的数据，然而文档中并没有说它是线程安全的。</p>
 
     </div>
 
@@ -299,6 +360,10 @@
             <span class="post-nav-divider"></span>
 
             <div class="post-nav-prev post-nav-item">
+              
+                <a href="/2019/12/18/Markdown-to-PPT-Marp/" rel="prev" title="Markdown to PPT: Marp">
+                  Markdown to PPT: Marp <i class="fa fa-chevron-right"></i>
+                </a>
               
             </div>
           </div>
@@ -347,7 +412,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Scripting-Overview"><span class="nav-number">1.</span> <span class="nav-text">Scripting Overview</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Creating-and-Using-Scripts"><span class="nav-number">1.1.</span> <span class="nav-text">Creating and Using Scripts</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Variables-and-the-Inspector"><span class="nav-number">1.2.</span> <span class="nav-text">Variables and the Inspector</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Controlling-GameObjects-using-components"><span class="nav-number">1.3.</span> <span class="nav-text">Controlling GameObjects using components</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Event-Functions"><span class="nav-number">1.4.</span> <span class="nav-text">Event Functions</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#C-Job-System"><span class="nav-number">2.</span> <span class="nav-text">C# Job System</span></a></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Scripting-Overview"><span class="nav-number">1.</span> <span class="nav-text">Scripting Overview</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Creating-and-Using-Scripts"><span class="nav-number">1.1.</span> <span class="nav-text">Creating and Using Scripts</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Variables-and-the-Inspector"><span class="nav-number">1.2.</span> <span class="nav-text">Variables and the Inspector</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Controlling-GameObjects-using-components"><span class="nav-number">1.3.</span> <span class="nav-text">Controlling GameObjects using components</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Event-Functions"><span class="nav-number">1.4.</span> <span class="nav-text">Event Functions</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Time-and-Framerate-Management"><span class="nav-number">1.5.</span> <span class="nav-text">Time and Framerate Management</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Creating-and-Destroying-GameObjects"><span class="nav-number">1.6.</span> <span class="nav-text">Creating and Destroying GameObjects</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Coroutine"><span class="nav-number">1.7.</span> <span class="nav-text">Coroutine</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Namespace"><span class="nav-number">1.8.</span> <span class="nav-text">Namespace</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Attributes"><span class="nav-number">1.9.</span> <span class="nav-text">Attributes</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#C-Job-System"><span class="nav-number">2.</span> <span class="nav-text">C# Job System</span></a></li></ol></div>
         
       </div>
       <!--/noindex-->
@@ -362,7 +427,7 @@
         
           <a href="/archives/">
         
-          <span class="site-state-item-count">22</span>
+          <span class="site-state-item-count">23</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>

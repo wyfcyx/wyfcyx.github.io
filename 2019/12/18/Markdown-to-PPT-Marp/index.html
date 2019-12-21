@@ -55,18 +55,18 @@
   };
 </script>
 
-  <meta name="description" content="熟悉一下 Unity 的 workflow 并记录下来吧。毕竟之前学的早就已经忘光了。">
+  <meta name="description" content="这里先 Mark 一下，以后做 PPT 的时候会来这里记录一下使用的经验。 这是官方网站 。">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Unity初心者">
-<meta property="og:url" content="http://yoursite.com/2019/12/16/Unity初心者/index.html">
+<meta property="og:title" content="Markdown to PPT: Marp">
+<meta property="og:url" content="http://yoursite.com/2019/12/18/Markdown-to-PPT-Marp/index.html">
 <meta property="og:site_name" content="Hexo">
-<meta property="og:description" content="熟悉一下 Unity 的 workflow 并记录下来吧。毕竟之前学的早就已经忘光了。">
+<meta property="og:description" content="这里先 Mark 一下，以后做 PPT 的时候会来这里记录一下使用的经验。 这是官方网站 。">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:updated_time" content="2019-12-19T13:36:46.507Z">
+<meta property="og:updated_time" content="2019-12-18T05:11:39.407Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Unity初心者">
-<meta name="twitter:description" content="熟悉一下 Unity 的 workflow 并记录下来吧。毕竟之前学的早就已经忘光了。">
-  <link rel="canonical" href="http://yoursite.com/2019/12/16/Unity初心者/">
+<meta name="twitter:title" content="Markdown to PPT: Marp">
+<meta name="twitter:description" content="这里先 Mark 一下，以后做 PPT 的时候会来这里记录一下使用的经验。 这是官方网站 。">
+  <link rel="canonical" href="http://yoursite.com/2019/12/18/Markdown-to-PPT-Marp/">
 
 
 <script id="page-configurations">
@@ -80,7 +80,7 @@
   };
 </script>
 
-  <title>Unity初心者 | Hexo</title>
+  <title>Markdown to PPT: Marp | Hexo</title>
   
 
 
@@ -195,7 +195,7 @@
   
   
   <div class="post-block post">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/12/16/Unity初心者/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/12/18/Markdown-to-PPT-Marp/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="shinbokuow">
@@ -207,7 +207,7 @@
       <meta itemprop="name" content="Hexo">
     </span>
       <header class="post-header">
-        <h1 class="post-title" itemprop="name headline">Unity初心者
+        <h1 class="post-title" itemprop="name headline">Markdown to PPT: Marp
 
           
         </h1>
@@ -223,19 +223,11 @@
                 
               
 
-              <time title="创建时间：2019-12-16 13:01:13" itemprop="dateCreated datePublished" datetime="2019-12-16T13:01:13+08:00">2019-12-16</time>
+              <time title="创建时间：2019-12-18 13:09:10 / 修改时间：13:11:39" itemprop="dateCreated datePublished" datetime="2019-12-18T13:09:10+08:00">2019-12-18</time>
             </span>
           
             
 
-            
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-calendar-check-o"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2019-12-19 21:36:46" itemprop="dateModified" datetime="2019-12-19T21:36:46+08:00">2019-12-19</time>
-              </span>
             
           
 
@@ -250,37 +242,9 @@
     <div class="post-body" itemprop="articleBody">
 
       
-        <p>熟悉一下 Unity 的 workflow 并记录下来吧。毕竟之前学的早就已经忘光了。</p>
+        <p>这里先 Mark 一下，以后做 PPT 的时候会来这里记录一下使用的经验。</p>
+<p>这是<a href="https://marp.app/" target="_blank" rel="noopener">官方网站</a> 。</p>
 <a id="more"></a>
-<h2 id="Part1-项目初始化"><a href="#Part1-项目初始化" class="headerlink" title="Part1 项目初始化"></a>Part1 项目初始化</h2><p>首先是将当前的 Scene 另存为到 Scene 文件夹下。</p>
-<p>随后新建了两个 3D Object ，分别是平台 Ground 和玩家操控的小球 Player 。我们可以修改它们的 Transform ，来设定它们的空间位置、朝向，或进行缩放。</p>
-<p>默认情况下，右侧是红色的 <script type="math/tex">x</script> 轴，前方是蓝色的 <script type="math/tex">z</script> 轴，正上方是绿色的 <script type="math/tex">y</script> 轴。</p>
-<p>新建 Materials 文件夹，在里面新建一个名为 Background 的 material ，在 Main Maps 中，修改 Albedo 为 (0, 12, 64) 即深蓝色。随后我们可以直接将这个 material 拖动到平台上。</p>
-<p>我们可以调整 Directional Light 的方向让平台被照亮，更亮一些。</p>
-<h2 id="Part2-移动小球"><a href="#Part2-移动小球" class="headerlink" title="Part2 移动小球"></a>Part2 移动小球</h2><p>选中 Player ，在 Component-&gt;Physics 菜单中给它附加 Rigidbody. 也可以通过 Inspector 最下面的 Add Component 按钮来附加 Component .</p>
-<p>Run 一下，由于默认具有 Gravity ，可以看到小球已经落下来了。</p>
-<p>通过 Add Component-&gt;New Script ，来添加一个新的名为 PlayerController 的 C# 脚本到 Player 上。为了方便管理，我们新建一个 Scripts 文件夹并将这个脚本放在 Script 文件夹中。</p>
-<p>打开这个脚本，可以看到这是一个继承了 MonoBehaviour 的 PlayerController 类，你可以重载 <code>Start, Update, FixedUpdate</code> 函数，分别代表…</p>
-<p>后面讲了一大堆怎么看 Unity 文档，分别查了 Input 和 Rigidbody . 为啥 Visual Studio 就没有查文档快捷键啊？</p>
-<p>我们要在 PlayerController 中，通过 Rigidbody 的 AddForce 方法去控制 Player 的 Rigidbody. 于是需要将 Player 的 Rigidbody 像参数一样传给 PlayerController , 或者说绑定到 PlayerController 上。我们的做法是：</p>
-<p>给 PlayerController 里面加一个私有成员：</p>
-<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">private</span> Rigidbody rb;</span><br></pre></td></tr></table></figure>
-<p>直接在 <code>Start</code> 中：</p>
-<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">rb = GetComponent&lt;Rigidbody&gt;();</span><br></pre></td></tr></table></figure>
-<p>这样就能获取脚本所属的 Object 的其他 Component 了。</p>
-<p>给 PlayerController 里面加一个公有成员</p>
-<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">float</span> speed;</span><br></pre></td></tr></table></figure>
-<p>以此来在脚本编辑器外部，也即在 Unity 中修改其数值来控制速度。</p>
-<h2 id="Part3-控制-Camera"><a href="#Part3-控制-Camera" class="headerlink" title="Part3 控制 Camera"></a>Part3 控制 Camera</h2><p>首先设置 Main Camera 的位置，其次我们可以通过设置 Rotation 来调整 Camera 绕 <script type="math/tex">x,y,z</script> 轴旋转的角度。</p>
-<p>相机的默认向前的方向为 <script type="math/tex">(0,0,1)</script> 。经过旋转之后向前的方向也会发生变化。</p>
-<p>事实上，我们调高相机，然后绕着 <script type="math/tex">x</script> 轴旋转 <script type="math/tex">45</script> 度。</p>
-<p>我们希望相机随着小球一起动，但是将相机作为小球的 Child 是不行的；因此当小球滚动时，相机也会绕着它滚动，但这不是我们想要的，我们希望相机始终保持在一个 <script type="math/tex">x-z</script> 平面上。</p>
-<p>思路是记录下 position 的 offset 并根据这个更新保持这个 offset 不变，而相机的 rotation 则一直不变。</p>
-<p>控制相机的脚本 CameraController 需要获取 Player 的 Object ，我们在脚本中开公有成员 GameObject player ,  并在 Unity Editor 中将 Player 拖到脚本设置中即可。</p>
-<h2 id="Part4-设置围栏"><a href="#Part4-设置围栏" class="headerlink" title="Part4 设置围栏"></a>Part4 设置围栏</h2><p>新建一个空的 GameObject 命名为 Wall 并将其作为一个组进行管理。我们让四面围墙都作为他的 Child 。</p>
-<p>所谓的围墙也就是新建一个 Cube 并修改其各项属性将其放到平台边缘即可。</p>
-<p>我们可以使用 Duplicate ，快捷键 Ctrl+D 来复制一个 Object 。</p>
-
     </div>
 
     
@@ -296,8 +260,8 @@
           <div class="post-nav">
             <div class="post-nav-next post-nav-item">
               
-                <a href="/2019/12/16/C-学习笔记/" rel="next" title="C#学习笔记">
-                  <i class="fa fa-chevron-left"></i> C#学习笔记
+                <a href="/2019/12/17/Unity-Script-文档阅读/" rel="next" title="Unity Script 文档阅读">
+                  <i class="fa fa-chevron-left"></i> Unity Script 文档阅读
                 </a>
               
             </div>
@@ -305,10 +269,6 @@
             <span class="post-nav-divider"></span>
 
             <div class="post-nav-prev post-nav-item">
-              
-                <a href="/2019/12/17/IndexFS-阅读笔记/" rel="prev" title="IndexFS 阅读笔记">
-                  IndexFS 阅读笔记 <i class="fa fa-chevron-right"></i>
-                </a>
               
             </div>
           </div>
@@ -357,8 +317,6 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Part1-项目初始化"><span class="nav-number">1.</span> <span class="nav-text">Part1 项目初始化</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Part2-移动小球"><span class="nav-number">2.</span> <span class="nav-text">Part2 移动小球</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Part3-控制-Camera"><span class="nav-number">3.</span> <span class="nav-text">Part3 控制 Camera</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Part4-设置围栏"><span class="nav-number">4.</span> <span class="nav-text">Part4 设置围栏</span></a></li></ol></div>
-        
       </div>
       <!--/noindex-->
 
