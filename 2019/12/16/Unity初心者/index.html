@@ -62,7 +62,7 @@
 <meta property="og:site_name" content="Hexo">
 <meta property="og:description" content="熟悉一下 Unity 的 workflow 并记录下来吧。毕竟之前学的早就已经忘光了。">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:updated_time" content="2019-12-19T13:36:46.507Z">
+<meta property="og:updated_time" content="2019-12-21T14:16:15.381Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Unity初心者">
 <meta name="twitter:description" content="熟悉一下 Unity 的 workflow 并记录下来吧。毕竟之前学的早就已经忘光了。">
@@ -234,7 +234,7 @@
                   <i class="fa fa-calendar-check-o"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2019-12-19 21:36:46" itemprop="dateModified" datetime="2019-12-19T21:36:46+08:00">2019-12-19</time>
+                <time title="修改时间：2019-12-21 22:16:15" itemprop="dateModified" datetime="2019-12-21T22:16:15+08:00">2019-12-21</time>
               </span>
             
           
@@ -280,6 +280,21 @@
 <h2 id="Part4-设置围栏"><a href="#Part4-设置围栏" class="headerlink" title="Part4 设置围栏"></a>Part4 设置围栏</h2><p>新建一个空的 GameObject 命名为 Wall 并将其作为一个组进行管理。我们让四面围墙都作为他的 Child 。</p>
 <p>所谓的围墙也就是新建一个 Cube 并修改其各项属性将其放到平台边缘即可。</p>
 <p>我们可以使用 Duplicate ，快捷键 Ctrl+D 来复制一个 Object 。</p>
+<h2 id="Part5-创建收集品"><a href="#Part5-创建收集品" class="headerlink" title="Part5 创建收集品"></a>Part5 创建收集品</h2><p>新建一个 Cube 名为 PickUp 作为收集品。通过脚本让它周期性旋转。</p>
+<p>新建 Prefabs 文件夹，直接从 Hierarchy 中将对应的 GameObject 拖拽到这个文件夹中，这样我们就有了一个 PickUp 的模板。 </p>
+<p>新建一个空 Object 名为 PickUps 管理所有的 PickUp 。</p>
+<p>接下来是调整 PickUps 的位置。可以通过调整右上角的 Gizmo 来调整视角。点击一下 y 轴从而可以自上而下进行观察。</p>
+<p>此时拖动 PickUp ，但是发现 <script type="math/tex">y</script> 坐标还是会变化的。将上面的 Toggle Tool Handle Rotation 从 Local 修改为 Global 即可。</p>
+<p>使用 Ctrl + D 复制很多这样的 PickUps 。然后通过修改 Prefab 的 Material 来修改所有 PickUps 的配色。</p>
+<h2 id="Part6-处理碰撞"><a href="#Part6-处理碰撞" class="headerlink" title="Part6 处理碰撞"></a>Part6 处理碰撞</h2><p>开始接触物理引擎啦！</p>
+<p>重载 Player 的 <code>onTriggerEnter</code> 函数，当碰撞物体的 Tag 为 “PickUp” 的时候，将碰撞物体 Disable 。</p>
+<p>这里我们直接在 Prefab 中修改 Tag ，我们要新建自己的 Tag 。</p>
+<p>但是运行起来的时候我们发现碰到 PickUp 的时候 Player 会被弹开，就像撞墙一样。我们要将 PickUp Prefab 中 Box Collider 中的 Is Trigger enable ，这样的话碰撞时只计算是否碰撞而不会产生物理效果。这是 Collider 和 Trigger 的区别。</p>
+<p>这里逻辑已经没问题了。但是出于性能优化，我们要给 PickUp Prefab 添加一个 Rigidbody 。理由是如果只有 Collider 这个 Component ，Unity 会认为它是静止不动的（如墙、地板等等），会将其缓存。但是我们的 PickUp 实际上每一帧都在变化，这样反而会频繁更新缓存大大降低性能。我们只需给它添加一个 Rigidbody Component ，这样 Unity 就会认为它会动从而不会将其加入缓存。</p>
+<p>加了 Rigidbody 之后 PickUp 会掉下去，因为我们 enable 了 Gravity 。我们 enable Is Kinematic 使它不受到任何作用力的影响来解决这一问题。</p>
+<h2 id="Part7-文本-UI"><a href="#Part7-文本-UI" class="headerlink" title="Part7 文本 UI"></a>Part7 文本 UI</h2><p>新建 UI -&gt; Text ，注意到同时新建了 Canvas 和 EventSystem , 每个 UI 必须是 Canvas 的孩子。</p>
+<p>修改 CountText 在 Canvas 的位置为左上角，感觉按 Alt 修改位置即可，不涉及旋转的话不必修改 Pivot 。</p>
+<p>之后的话就都很简单了。</p>
 
     </div>
 
@@ -357,7 +372,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Part1-项目初始化"><span class="nav-number">1.</span> <span class="nav-text">Part1 项目初始化</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Part2-移动小球"><span class="nav-number">2.</span> <span class="nav-text">Part2 移动小球</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Part3-控制-Camera"><span class="nav-number">3.</span> <span class="nav-text">Part3 控制 Camera</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Part4-设置围栏"><span class="nav-number">4.</span> <span class="nav-text">Part4 设置围栏</span></a></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Part1-项目初始化"><span class="nav-number">1.</span> <span class="nav-text">Part1 项目初始化</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Part2-移动小球"><span class="nav-number">2.</span> <span class="nav-text">Part2 移动小球</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Part3-控制-Camera"><span class="nav-number">3.</span> <span class="nav-text">Part3 控制 Camera</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Part4-设置围栏"><span class="nav-number">4.</span> <span class="nav-text">Part4 设置围栏</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Part5-创建收集品"><span class="nav-number">5.</span> <span class="nav-text">Part5 创建收集品</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Part6-处理碰撞"><span class="nav-number">6.</span> <span class="nav-text">Part6 处理碰撞</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Part7-文本-UI"><span class="nav-number">7.</span> <span class="nav-text">Part7 文本 UI</span></a></li></ol></div>
         
       </div>
       <!--/noindex-->
@@ -393,7 +408,7 @@
 
     <footer id="footer" class="footer">
       <div class="footer-inner">
-        <div class="copyright">&copy; <span itemprop="copyrightYear">2019</span>
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2020</span>
   <span class="with-love" id="animate">
     <i class="fa fa-user"></i>
   </span>
