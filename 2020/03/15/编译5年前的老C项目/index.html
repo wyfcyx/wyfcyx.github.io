@@ -55,14 +55,18 @@
   };
 </script>
 
-  <meta property="og:type" content="website">
-<meta property="og:title" content="Hexo">
-<meta property="og:url" content="http://yoursite.com/archives/2019/09/index.html">
+  <meta name="description" content="出于毕设需要，花了很长时间终于把 IndexFS-0.4 跑通了，对于如何编译老程序又多了一些新的手段，在这里整理一下。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="编译5年前的老C项目">
+<meta property="og:url" content="http://yoursite.com/2020/03/15/编译5年前的老C项目/index.html">
 <meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="出于毕设需要，花了很长时间终于把 IndexFS-0.4 跑通了，对于如何编译老程序又多了一些新的手段，在这里整理一下。">
 <meta property="og:locale" content="zh-CN">
+<meta property="og:updated_time" content="2020-03-15T09:37:20.641Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Hexo">
-  <link rel="canonical" href="http://yoursite.com/archives/2019/09/">
+<meta name="twitter:title" content="编译5年前的老C项目">
+<meta name="twitter:description" content="出于毕设需要，花了很长时间终于把 IndexFS-0.4 跑通了，对于如何编译老程序又多了一些新的手段，在这里整理一下。">
+  <link rel="canonical" href="http://yoursite.com/2020/03/15/编译5年前的老C项目/">
 
 
 <script id="page-configurations">
@@ -70,13 +74,13 @@
   CONFIG.page = {
     sidebar: "",
     isHome: false,
-    isPost: false,
+    isPost: true,
     isPage: false,
-    isArchive: true
+    isArchive: false
   };
 </script>
 
-  <title>归档 | Hexo</title>
+  <title>编译5年前的老C项目 | Hexo</title>
   
 
 
@@ -168,18 +172,6 @@
 
     
 
-    
-    
-      
-      
-    
-      
-      
-    
-    
-
-  
-
 </nav>
 </div>
     </header>
@@ -197,66 +189,102 @@
           <div id="content" class="content">
             
 
+  <div id="posts" class="posts-expand">
+      <article itemscope itemtype="http://schema.org/Article">
   
   
   
-  <div class="post-block archive">
-    <div id="posts" class="posts-collapse">
-      <div class="collection-title">
-        
-        
-        
+  <div class="post-block post">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/03/15/编译5年前的老C项目/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="shinbokuow">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Hexo">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">编译5年前的老C项目
+
           
-        
-        <span class="collection-header">嗯..! 目前共计 24 篇日志。 继续努力。</span>
-      </div>
-      
+        </h1>
 
-      
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
 
-  
-  
+              
+                
+              
 
-  
+              <time title="创建时间：2020-03-15 13:56:54 / 修改时间：17:37:20" itemprop="dateCreated datePublished" datetime="2020-03-15T13:56:54+08:00">2020-03-15</time>
+            </span>
+          
+            
+
+            
+          
+
+          
+
+        </div>
+      </header>
+
     
-    <div class="collection-year">
-      <h1 class="collection-header">2019</h1>
-    </div>
-  
+    
+    
+    <div class="post-body" itemprop="articleBody">
 
-  <article itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <h2 class="post-title">
-        
-          <a class="post-title-link" href="/2019/09/30/VR迷宫01-OpenGL与GoogleVRSDK/" itemprop="url">
-            <span itemprop="name">VR迷宫01-OpenGL与GoogleVRSDK</span>
-          </a>
-        
-      </h2>
-
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated"
-              datetime="2019-09-30T14:25:02+08:00"
-              content="2019-09-30">
-          09-30
-        </time>
-      </div>
-
-    </header>
-  </article>
-
-
-
+      
+        <p>出于毕设需要，花了很长时间终于把 <a href="https://github.com/zhengqmark/indexfs-0.4" target="_blank" rel="noopener">IndexFS-0.4</a> 跑通了，对于如何编译老程序又多了一些新的手段，在这里整理一下。</p>
+<a id="more"></a>
+<p>首先是在编译 <code>Thrift</code> 过程中，出现 <code>g++: internal error</code>  这样让人摸不到头脑的错误。后来是发现对于某些比较大的项目，可能需要较多可用的核和大内存。比如 <code>Thrift</code> 就需要至少双核和 2GB 内存，而当时我是在虚拟机里面编译的，因此就会在等待很长时间之后报出上面那个错误，于是我回到实际 Ubuntu 上编译解决掉了这个问题。</p>
+<p>接下来遇到的问题是可能目前 <code>gcc/g++</code> 的版本过新，不兼容几年前的项目了。于是我只好 Google 如何管理本地的 <code>gcc/g++</code> 版本，最终找到一种利用 <code>update-alternatives</code> 的方法，思路类似软链接，可以把 <code>gcc/g++</code> 从安装的几个不同版本之间切换。而且，在切换 <code>gcc-4</code> 的时候发现 Ubuntu 18.04 是不存在这个版本的，只有 <code>gcc-4.8</code> 。现在想来好像切换版本并没有解决问题来着？我也忘了。不过重要的是，如果一个项目依赖其他项目提供的动态链接库，那么它们必须使用相同的 <code>gcc</code> 版本来编译得到，不然有可能无法链接。</p>
+<p>动态链接是个非常恶心的问题。在编译 <code>IndexFS</code> 一直提示找不到 <code>libgflags.so.2</code> ，然而我去看了一下发现这个软链接链接到正确的地方了。但是原文件貌似权限设的有点紧，于是我果断改成 <code>+777</code> 。然后直接 <code>find /usr/local/lib -name libgflags.so.2</code> 好像能找到，但是通过 <code>ldd</code> 查看动态链接库是否齐全还是找不到这个库。最后只能发飙，到 <code>/etc/ld.so.conf.d/usr_local_lib.conf</code> 硬把这个库加进去，然后 <code>sudo /sbin/ldcondig</code> 。如今想来，可能是编译的过程中太过滥用 <code>su</code> 导致的权限问题。之后还是老老实实只在必需的时候才用 <code>sudo</code> 吧。</p>
 
     </div>
+
+    
+    
+    
+        
+      
+
+      <footer class="post-footer">
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-next post-nav-item">
+              
+                <a href="/2019/12/18/Markdown-to-PPT-Marp/" rel="next" title="Markdown to PPT: Marp">
+                  <i class="fa fa-chevron-left"></i> Markdown to PPT: Marp
+                </a>
+              
+            </div>
+
+            <span class="post-nav-divider"></span>
+
+            <div class="post-nav-prev post-nav-item">
+              
+            </div>
+          </div>
+        
+      </footer>
+    
   </div>
   
   
   
+  </article>
 
-  
-
+  </div>
 
 
           </div>
@@ -275,6 +303,11 @@
 
   <aside class="sidebar">
     <div class="sidebar-inner">
+        
+        
+        
+        
+      
 
       <ul class="sidebar-nav motion-element">
         <li class="sidebar-nav-toc">
